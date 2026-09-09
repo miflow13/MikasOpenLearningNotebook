@@ -1,9 +1,6 @@
 # Mika's Open Learning Notebook 🌱
 
 A living notebook of what I'm learning in public: programming, Linux, software engineering, debugging, design, tooling, and the lessons I pick up while building real projects.
-
-This is not meant to be a perfect textbook. It is a record of concepts I have actually worked through, broken, fixed, tested, and understood better over time.
-
 ## Current notebook map
 
 ### Python
