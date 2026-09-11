@@ -1,5 +1,5 @@
 # Mika's Open Learning Notebook 🌱
-f
+
 A living notebook of what I'm learning in public: programming, Linux, software engineering, debugging, design, tooling, and the lessons I pick up while building real projects.
 ## Current notebook map
 
