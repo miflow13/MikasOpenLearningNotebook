@@ -1,4 +1,11 @@
-# Git & GitHub Workflow
+---
+title: "Git & GitHub Workflow"
+description: "A practical mental model for Git, branches, commits, recovery, issues, pull requests, and repository documentation."
+topic: "Git & GitHub"
+order: 6
+featured: false
+draft: false
+---
 
 ## The four places I think about
 

@@ -1,4 +1,11 @@
-# State Machines & Architecture
+---
+title: "State Machines & Architecture"
+description: "Notes on explicit state, ownership, priorities, transitions, and keeping interactive software predictable."
+topic: "Software Engineering"
+order: 3
+featured: false
+draft: false
+---
 
 ## What a state machine gives me
 

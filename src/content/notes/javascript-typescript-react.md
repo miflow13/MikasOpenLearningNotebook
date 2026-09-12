@@ -1,4 +1,11 @@
-# JavaScript, TypeScript & React
+---
+title: "JavaScript, TypeScript & React"
+description: "A condensed set of web-development concepts I have worked through and want to keep practicing."
+topic: "Web Development"
+order: 11
+featured: false
+draft: false
+---
 
 A condensed set of web-development concepts I have worked through and want to keep practicing.
 

@@ -1,4 +1,11 @@
-# Pixel Art & Animation Pipeline
+---
+title: "Pixel Art & Animation Pipeline"
+description: "Lessons from creating and integrating pixel-art animation into software."
+topic: "Pixel Art & Animation"
+order: 8
+featured: false
+draft: false
+---
 
 Lessons from creating and integrating pixel-art animation into software.
 

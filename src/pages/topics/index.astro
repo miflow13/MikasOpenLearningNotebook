@@ -1,0 +1,23 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort((a, b) => a.data.order - b.data.order);
+const topicNames = [...new Set(notes.map((note) => note.data.topic))].sort();
+const topics = topicNames.map((name) => ({ name, notes: notes.filter((note) => note.data.topic === name) }));
+---
+<BaseLayout title="topics" description="Browse Mika's learning notebook by topic.">
+  <h2>topics</h2>
+  <p>The notebook is organized around what I am learning, not around a curriculum.</p>
+  {topics.map((topic) => (
+    <section>
+      <h3>{topic.name}</h3>
+      <ul class="note-list">
+        {topic.notes.map((note) => (
+          <li><a href={`${base}notes/${note.id}/`}>{note.data.title}</a></li>
+        ))}
+      </ul>
+    </section>
+  ))}
+</BaseLayout>

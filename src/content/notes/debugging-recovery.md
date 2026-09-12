@@ -1,4 +1,11 @@
-# Debugging & Recovery
+---
+title: "Debugging & Recovery"
+description: "An evidence-first workflow for reproducing bugs, ranking hypotheses, making minimal fixes, and recovering safely."
+topic: "Software Engineering"
+order: 2
+featured: false
+draft: false
+---
 
 This is one of the most important workflows I have learned.
 

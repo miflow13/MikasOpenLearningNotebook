@@ -1,0 +1,14 @@
+---
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+---
+<header>
+  <a class="skip-link" href="#content">skip to content</a>
+  <h1><a class="site-title" href={base}>my learning of all the things</a></h1>
+  <p class="tagline">notes from learning in public</p>
+  <nav aria-label="Main navigation">
+    <a href={`${base}notes/`}>notes</a><span class="sep">·</span>
+    <a href={`${base}topics/`}>topics</a><span class="sep">·</span>
+    <a href={`${base}about/`}>about</a><span class="sep">·</span>
+    <a href="https://github.com/miflow13/MikasOpenLearningNotebook">github</a>
+  </nav>
+</header>

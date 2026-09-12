@@ -1,4 +1,11 @@
-# Web APIs, Networking & SQL
+---
+title: "Web APIs, Networking & SQL"
+description: "Notes on HTTP, DNS, CORS, browser debugging, APIs, networking, and SQL."
+topic: "Web Development"
+order: 12
+featured: false
+draft: false
+---
 
 ## HTTP
 

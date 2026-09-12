@@ -1,4 +1,11 @@
-# Python Project Practices
+---
+title: "Python Project Practices"
+description: "Python lessons beyond syntax: ownership, state, packaging, testing, and clear module boundaries."
+topic: "Python"
+order: 7
+featured: false
+draft: false
+---
 
 These are Python lessons I have learned beyond basic syntax while working on real applications.
 

@@ -1,4 +1,11 @@
-# Testing, Packaging & Release Discipline
+---
+title: "Testing, Packaging & Release Discipline"
+description: "A layered approach to unit tests, packaging, live validation, soak testing, and release discipline."
+topic: "Testing & Packaging"
+order: 9
+featured: false
+draft: false
+---
 
 ## Different tests catch different failures
 
