@@ -1,4 +1,11 @@
-# Linux & Fedora Fundamentals
+---
+title: "Linux & Fedora Fundamentals"
+description: "Notes from working daily in Linux and troubleshooting my own machines."
+topic: "Linux & Fedora"
+order: 4
+featured: false
+draft: false
+---
 
 Notes from working daily in Linux and troubleshooting my own machines.
 

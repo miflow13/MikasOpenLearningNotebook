@@ -1,4 +1,11 @@
-# Issues, Documentation & Planning
+---
+title: "Issues, Documentation & Planning"
+description: "How I use issues, documentation, acceptance criteria, planning, and definitions of done to reduce ambiguity."
+topic: "Project Management"
+order: 10
+featured: false
+draft: false
+---
 
 ## Different tools should have different jobs
 

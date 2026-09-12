@@ -1,4 +1,11 @@
-# Learning Principles
+---
+title: "Learning Principles"
+description: "Notes on how I learn technical material best."
+topic: "Study Notes"
+order: 1
+featured: true
+draft: false
+---
 
 Notes on how I learn technical material best.
 

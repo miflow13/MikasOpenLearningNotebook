@@ -1,10 +1,15 @@
-# GTK4, PyGObject, Wayland & XWayland
-
-Notes from building a Linux desktop application with GTK.
-
-## GTK4
+---
+title: "GTK4, PyGObject, Wayland & XWayland"
+description: "Notes from building a Linux desktop application with GTK."
+topic: "Desktop Linux"
+order: 5
+featured: false
+draft: false
+---
 
 GTK is a Linux desktop UI toolkit used heavily by GNOME applications.
+
+## GTK4
 
 GTK provides widgets and event handling such as:
 

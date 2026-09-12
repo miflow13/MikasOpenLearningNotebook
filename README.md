@@ -1,42 +1,39 @@
 # my learning of all the things
 
-A living notebook of what I'm learning in public: programming, Linux, software engineering, debugging, design, tooling, and the lessons I pick up while building real projects.
-## Current notebook map
+A public learning notebook and small Astro blog for the things I learn while programming, debugging, building Linux software, making art, and figuring things out as I go.
 
-### Python
-- [Python Functions](LearningPythonInPublic/Pythonfunctions.md)
-- [Python Project Practices](LearningPythonInPublic/Python-Project-Practices.md)
+**Site:** https://miflow13.github.io/MikasOpenLearningNotebook/
 
-### Linux / Fedora
-- [Linux & Fedora Fundamentals](Linux-and-Fedora/Linux-Fundamentals.md)
-- [GTK4, PyGObject, Wayland & XWayland](Desktop-Linux/GTK4-PyGObject-Wayland.md)
+## how it works
 
-### Git / GitHub
-- [Git & GitHub Workflow](Git-and-GitHub/Git-GitHub-Workflow.md)
+The notes live in `src/content/notes/` as Markdown files. Astro turns them into the home page, topic index, note index, and individual article pages.
 
-### Software engineering
-- [Debugging & Recovery](Software-Engineering/Debugging-and-Recovery.md)
-- [State Machines & Architecture](Software-Engineering/State-Machines-and-Architecture.md)
-- [Testing, Packaging & Release Discipline](Testing-and-Packaging/Testing-Packaging-and-Release.md)
+To add a new note, create a Markdown file with frontmatter like:
 
-### Pixel art / animation
-- [Pixel Art & Animation Pipeline](Pixel-Art-and-Animation/Pixel-Art-Animation-Pipeline.md)
+```yaml
+---
+title: "What I learned"
+description: "A short summary of the note."
+topic: "Software Engineering"
+order: 14
+featured: false
+draft: false
+---
+```
 
-### Web development
-- [JavaScript, TypeScript & React](Web-Development/JavaScript-TypeScript-React.md)
-- [Web APIs, Networking & SQL](Web-Development/Web-APIs-Networking-and-SQL.md)
+Then write the note underneath it and push the change. GitHub Actions builds and deploys the site from `main`.
 
-### Project / engineering workflow
-- [Issues, Documentation & Planning](Project-Management/Issues-Docs-and-Planning.md)
-- [Learning Principles](Study-Notes/Learning-Principles.md)
+## local development
 
-## Biggest lessons so far
+```bash
+npm install
+npm run dev
+```
 
-1. **Evidence beats guessing.** Reproduce the problem, inspect the actual state, form hypotheses, then verify the fix.
-2. **Small checkpoints are powerful.** A clean commit before a risky change makes experimentation much safer.
-3. **Architecture should reduce fighting.** One state system, one source of truth, and clear ownership of timers/input is easier to reason about than parallel systems.
-4. **A feature is not done because it looks right.** It also needs tests, recovery paths, packaging checks, and live validation.
-5. **Tooling is part of engineering.** Git, tests, issue trackers, docs, terminal tools, and build systems are not side chores—they are how reliable software gets made.
-6. **Learning sticks better when I build something real.** Projects expose the gaps that tutorials can hide.
+Production build:
 
-_Last expanded: September 2026._
+```bash
+npm run build
+```
+
+The visual style intentionally matches my other small sites: plain white background, serif headings, simple links, thin rules, and very little decoration.
