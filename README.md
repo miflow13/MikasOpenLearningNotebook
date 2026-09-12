@@ -17,6 +17,7 @@ A living notebook of what I'm learning in public: programming, Linux, software e
 ### Software engineering
 - [Debugging & Recovery](Software-Engineering/Debugging-and-Recovery.md)
 - [State Machines & Architecture](Software-Engineering/State-Machines-and-Architecture.md)
+- [Open Source Contribution Workflow](Software-Engineering/Open-Source-Contribution-Workflow.md)
 - [Testing, Packaging & Release Discipline](Testing-and-Packaging/Testing-Packaging-and-Release.md)
 
 ### Pixel art / animation
@@ -38,5 +39,12 @@ A living notebook of what I'm learning in public: programming, Linux, software e
 4. **A feature is not done because it looks right.** It also needs tests, recovery paths, packaging checks, and live validation.
 5. **Tooling is part of engineering.** Git, tests, issue trackers, docs, terminal tools, and build systems are not side chores—they are how reliable software gets made.
 6. **Learning sticks better when I build something real.** Projects expose the gaps that tutorials can hide.
+7. **Reading other people's code is its own engineering skill.** External contributions teach me to work inside existing conventions, justify small changes, and learn from review instead of controlling every design decision myself.
+
+## Current learning focus
+
+I'm starting to practice contributing to established open-source projects, beginning with Python/Linux desktop software. The focus is less on collecting merged PRs and more on learning how mature projects structure code, tests, review, and platform-specific behavior.
+
+_Currently exploring: BeeWare Toga and its GTK backend._
 
 _Last expanded: September 2026._
