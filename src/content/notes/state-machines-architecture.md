@@ -121,3 +121,44 @@ If a rewrite makes the program less predictable, introduces duplicate systems, o
 ## Main lesson
 
 Good architecture is not about having more layers. It is about making ownership, state, transitions, and recovery obvious enough that future changes stay safe.
+
+
+## Layered state: domain, behavior, and presentation
+
+A newer lesson is that one state machine should not be forced to represent every kind of state in the program.
+
+A long-running feature can have its own domain state while the creature temporarily changes behavior or presentation.
+
+Example:
+
+```text
+FocusSession: ACTIVE
+Behavior: COMPUTER
+Presentation: writing loop
+
+user drags
+
+FocusSession: ACTIVE
+Behavior: DRAGGED
+Presentation: drag
+
+drag ends
+
+FocusSession: ACTIVE
+Behavior: COMPUTER
+Presentation: writing loop
+```
+
+The session remains authoritative while presentation is temporarily interrupted.
+
+This makes the question more precise than "what state is the app in?"
+
+I should ask:
+
+- what durable/domain state exists?
+- who owns behavioral state?
+- who currently owns presentation?
+- which layer is allowed to interrupt which?
+- what should resume afterward?
+
+The important architectural rule is not "everything must be one enum." It is "each kind of state must have one clear owner, and transitions between layers must be explicit."
