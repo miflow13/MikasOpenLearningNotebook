@@ -112,3 +112,31 @@ Depending on the task, done may mean:
 ## Main lesson
 
 Project management is not bureaucracy when it reduces ambiguity. Good issue tracking and documentation make engineering faster because I spend less time reconstructing what happened.
+
+
+## Documentation debt can become release debt
+
+A project can evolve faster than its docs.
+
+That creates contradictions such as:
+
+```text
+current code → feature is shipped
+README → feature is shipped
+roadmap → feature is still forbidden/future work
+package metadata → old version
+release notes → incomplete feature list
+```
+
+Before a release, documentation needs the same kind of synchronization pass as code integration.
+
+A useful release-doc audit asks:
+
+1. What is the current source of truth?
+2. Which docs describe current behavior?
+3. Which docs are intentionally historical?
+4. Which old constraints were scoped to a previous feature/phase?
+5. Do package/runtime/release versions agree?
+6. Does the regression checklist cover the systems that now exist?
+
+Historical documents do not always need rewriting. Sometimes the right fix is to label them clearly as historical so they cannot be mistaken for current policy.

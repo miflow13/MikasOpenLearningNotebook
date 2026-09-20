@@ -121,3 +121,59 @@ Conflicting versions make debugging installations harder.
 ## Main lesson
 
 "It works on my checkout" is not a release standard. A trustworthy change survives focused tests, the full suite, packaging, and live use.
+
+
+## Regression testing grows with feature composition
+
+As a project gains long-running features, the highest-risk failures move to boundaries between systems.
+
+Instead of testing only:
+
+```text
+Feed works
+Focus works
+Drag works
+```
+
+I also need combinations:
+
+```text
+Focus → Drag → Focus resumes
+Focus → Sleep → session pauses
+Feed → level-up → recovery
+Catalogue → bond update → refresh
+Shutdown → pending reward → persistence
+```
+
+A regression watchlist is useful because these combinations are easy to forget even when individual unit suites are strong.
+
+## Release documentation is part of the release
+
+I learned that code can be ready while the repository still tells an old story.
+
+Before a release, audit:
+
+- README
+- changelog
+- package version
+- runtime version
+- roadmap/current-status docs
+- regression checklist
+- known issues
+- install/update instructions
+- historical docs that might look current
+
+If documentation says "do not add XP" after XP has intentionally shipped, that is a release defect even if the code works.
+
+## Environment-specific skips need accurate reporting
+
+A test skipped because it requires a real session bus or compositor is not evidence that the behavior passed.
+
+Release notes should distinguish:
+
+- automated test passed
+- test skipped because environment unavailable
+- package/import validation passed
+- live desktop QA still required
+
+That keeps confidence grounded in what was actually verified.
