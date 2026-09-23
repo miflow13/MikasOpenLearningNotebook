@@ -4,12 +4,41 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort((a,b)=>b.data.order-a.data.order);
 const featured = notes.find((note)=>note.data.featured) ?? notes[0];
-const latest = notes.filter((note)=>note.id!==featured?.id).slice(0,8);
+const latest = notes.filter((note)=>note.id!==featured?.id).slice(0,6);
 const topics=[...new Set(notes.map((note)=>note.data.topic))];
 ---
 <BaseLayout>
-<section><p class="notice"><strong>I learn by making the thing first.</strong> This is the trail I leave behind: concepts, bugs, wrong turns, architecture decisions, and the moment something finally clicks.</p></section>
-{featured && <><hr/><section aria-labelledby="start-heading"><p class="kicker" id="start-heading">pinned field note</p><p class="featured-title"><a href={`${base}notes/${featured.id}/`}>{featured.data.title}</a></p><p class="meta">{featured.data.topic}</p><p>{featured.data.description}</p><p><a href={`${base}notes/${featured.id}/`}>open note →</a></p></section></>}
-<hr/><section aria-labelledby="notes-heading"><p class="kicker">recent observations</p><h2 id="notes-heading">What I've been figuring out</h2><ul class="note-list">{latest.map((note)=><li><span class="topic-label">{note.data.topic}</span><br/><a href={`${base}notes/${note.id}/`}>{note.data.title}</a><p class="note-description">{note.data.description}</p></li>)}</ul><p><a href={`${base}notes/`}>open the whole notebook →</a></p></section>
-<hr/><section aria-labelledby="topics-heading"><p class="kicker">index</p><h2 id="topics-heading">The map keeps growing</h2><p>{topics.join(' · ')}</p><p><a href={`${base}topics/`}>browse the map →</a></p></section>
+  <section class="home-hero">
+    <div>
+      <p class="kicker">Mika's working notebook · continuously under construction</p>
+      <h2 class="hero-title">Learning by<br/><em>building the thing.</em></h2>
+      <p class="hero-copy">Not tutorials from the finish line. These are field notes from inside the work: what broke, what clicked, what I misunderstood, and the mental models I want to keep.</p>
+      <div class="hero-actions"><a class="primary-action" href={`${base}notes/`}>enter the notebook →</a><a href={`${base}topics/`}>browse the map</a></div>
+    </div>
+    <aside class="status-card">
+      <p class="kicker">notebook status</p>
+      <strong>{notes.length}</strong><span>notes collected</span>
+      <strong>{topics.length}</strong><span>topic trails</span>
+      <div class="status-line"><i></i> still learning</div>
+    </aside>
+  </section>
+
+  {featured && <section class="pinboard">
+    <div class="section-heading"><div><p class="kicker">pinned to the desk</p><h2>Current rabbit hole</h2></div><span class="scribble">← start here</span></div>
+    <article class="featured-card">
+      <div class="featured-index">01</div>
+      <div><span class="topic-label">{featured.data.topic}</span><h3><a href={`${base}notes/${featured.id}/`}>{featured.data.title}</a></h3><p>{featured.data.description}</p><a href={`${base}notes/${featured.id}/`}>open field note →</a></div>
+    </article>
+  </section>}
+
+  <section class="desk-section">
+    <div class="section-heading"><div><p class="kicker">latest entries</p><h2>Fresh from the workbench</h2></div><a href={`${base}notes/`}>view all {notes.length} →</a></div>
+    <div class="home-note-grid">{latest.map((note,i)=><article class="home-note-card"><span class="card-number">{String(i+2).padStart(2,'0')}</span><span class="topic-label">{note.data.topic}</span><h3><a href={`${base}notes/${note.id}/`}>{note.data.title}</a></h3><p>{note.data.description}</p></article>)}</div>
+  </section>
+
+  <section class="topic-map">
+    <p class="kicker">the messy map</p><h2>Follow a trail</h2>
+    <div class="topic-cloud">{topics.map((topic)=><a href={`${base}topics/`}>{topic}</a>)}</div>
+    <p class="map-note">No curriculum. Just connections forming as I go.</p>
+  </section>
 </BaseLayout>
