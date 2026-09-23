@@ -1,76 +1,26 @@
 :root {
-  --paper: #ffffff;
-  --ink: #111111;
-  --muted: #555555;
-  --rule: #bdbdbd;
-  --soft: #f6f6f6;
-  --green: #71b971;
-  --green-soft: #f5fff5;
-  --link: #0000cc;
-  --visited: #551a8b;
-  --content: 760px;
+  --night:#101511; --panel:#161d18; --panel2:#1c251e; --paper:#f2ead8; --ink:#ece7d8;
+  --muted:#a9b3a8; --rule:#334238; --moss:#9bd38b; --acid:#c7f36b; --rust:#e0a46d;
+  --content:980px; --reading:720px;
 }
-
-* { box-sizing: border-box; }
-html { background: var(--paper); color-scheme: light; }
-body {
-  max-width: var(--content);
-  margin: 36px auto;
-  padding: 0 18px 40px;
-  color: var(--ink);
-  background: var(--paper);
-  font-family: Verdana, Arial, Helvetica, sans-serif;
-  font-size: 15px;
-  line-height: 1.65;
-}
-::selection { background: #dff3df; }
-header { margin-bottom: 20px; }
-h1, h2, h3 { font-family: Georgia, "Times New Roman", serif; font-weight: normal; }
-h1 { margin: 0; font-size: 38px; line-height: 1.1; }
-h2 { margin: 24px 0 10px; font-size: 23px; line-height: 1.25; }
-h3 { margin: 22px 0 8px; font-size: 18px; }
-p { margin: 10px 0; }
-.site-title { color: var(--ink); text-decoration: none; }
-.site-title:visited { color: var(--ink); }
-.tagline, .meta, .kicker, .small, .topic-label { font-family: "Courier New", Courier, monospace; }
-.tagline { margin: 4px 0 12px; color: var(--muted); font-size: 13px; }
-nav { display: flex; flex-wrap: wrap; gap: 0 7px; font-size: 13px; }
-nav .sep { color: #888; }
-a { color: var(--link); text-decoration: underline; text-underline-offset: 2px; }
-a:visited { color: var(--visited); }
-a:hover { color: #008000; }
-hr { height: 1px; margin: 22px 0; border: 0; border-top: 1px solid var(--rule); }
-.notice { padding: 8px 10px; border-left: 4px solid var(--green); background: var(--green-soft); }
-.kicker { margin-bottom: 7px; color: var(--muted); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
-.featured-title { margin: 5px 0 6px; font-family: Georgia, "Times New Roman", serif; font-size: 27px; line-height: 1.25; }
-.featured-title a, .note-list a, .topic-list a { color: var(--ink); text-decoration-thickness: 1px; }
-.featured-title a:visited, .note-list a:visited, .topic-list a:visited { color: var(--ink); }
-.note-list, .topic-list { margin: 0; padding: 0; list-style: none; }
-.note-list li { padding: 10px 0; border-bottom: 1px dotted #cccccc; }
-.note-list li:last-child { border-bottom: 0; }
-.note-description { margin: 3px 0 0; color: var(--muted); font-size: 13px; }
-.topic-label { color: var(--muted); font-size: 11px; }
-.topic-list li { display: flex; justify-content: space-between; gap: 18px; padding: 7px 0; border-bottom: 1px dotted #cccccc; }
-.topic-list li:last-child { border-bottom: 0; }
-.topic-count { color: var(--muted); font-family: "Courier New", Courier, monospace; font-size: 11px; }
-.article-header { margin-bottom: 22px; }
-.article-title { margin: 4px 0 8px; font-size: clamp(32px, 7vw, 48px); line-height: 1.06; }
-.article-description { max-width: 650px; color: var(--muted); font-family: Georgia, "Times New Roman", serif; font-size: 19px; line-height: 1.45; }
-.prose h2 { margin-top: 32px; }
-.prose h3 { margin-top: 25px; }
-.prose blockquote { margin: 20px 0; padding: 2px 0 2px 14px; border-left: 3px solid var(--green); color: #333; }
-.prose code, .prose pre, code, pre { font-family: "Courier New", Courier, monospace; }
-.prose code { padding: 1px 3px; background: #f1f1f1; }
-.prose pre { overflow-x: auto; padding: 10px 12px; border: 1px solid var(--rule); background: var(--soft); font-size: 13px; line-height: 1.45; }
-.prose pre code { padding: 0; background: transparent; }
-footer { color: var(--muted); font-size: 12px; }
-.small { font-size: 11px; }
-.skip-link { position: absolute; left: -9999px; top: 0; }
-.skip-link:focus { left: 10px; top: 10px; z-index: 10; padding: 6px 8px; background: white; border: 1px solid #111; }
-@media (max-width: 600px) {
-  body { margin-top: 20px; font-size: 14px; }
-  h1 { font-size: 32px; }
-  h2 { font-size: 21px; }
-  .article-title { font-size: 34px; }
-  .topic-list li { align-items: flex-start; }
-}
+*{box-sizing:border-box} html{background:var(--night);color-scheme:dark}
+body{max-width:var(--content);margin:0 auto;padding:34px 24px 64px;color:var(--ink);background:var(--night);font-family:ui-monospace,"SFMono-Regular",Consolas,"Liberation Mono",monospace;font-size:15px;line-height:1.7}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.18;background-image:linear-gradient(rgba(255,255,255,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);background-size:24px 24px;mask-image:linear-gradient(to bottom,#000,transparent 75%)}
+::selection{background:var(--acid);color:#101510} header{margin-bottom:28px}
+h1,h2,h3{font-family:Georgia,"Times New Roman",serif;color:var(--paper)} h1{margin:0;font-size:clamp(34px,6vw,58px);line-height:.98;letter-spacing:-.035em} h2{margin:32px 0 12px;font-size:26px} h3{margin:26px 0 8px;font-size:19px} p{margin:11px 0}
+.site-title{color:var(--paper);text-decoration:none}.site-title:visited{color:var(--paper)} .tagline,.meta,.kicker,.small,.topic-label{font-family:inherit}
+.tagline{margin:9px 0 18px;color:var(--moss);font-size:12px;text-transform:uppercase;letter-spacing:.12em}
+nav{display:flex;flex-wrap:wrap;gap:8px;font-size:12px} nav a{padding:5px 9px;border:1px solid var(--rule);border-radius:999px;text-decoration:none;background:var(--panel)} nav .sep{display:none}
+a{color:var(--moss);text-decoration-color:#607963;text-underline-offset:3px}a:visited{color:var(--moss)}a:hover{color:var(--acid);border-color:#6f8b71}
+hr{height:1px;margin:30px 0;border:0;border-top:1px solid var(--rule)}
+.notice{position:relative;padding:22px 24px;border:1px solid #415545;border-radius:14px;background:linear-gradient(135deg,var(--panel2),#131a15);font-family:Georgia,"Times New Roman",serif;font-size:20px;line-height:1.5;box-shadow:0 18px 50px rgba(0,0,0,.18)}
+.notice:before{content:"FIELD NOTE  /  OPEN LEARNING";display:block;margin-bottom:9px;color:var(--acid);font:10px/1.2 ui-monospace,monospace;letter-spacing:.16em}
+.kicker{margin-bottom:8px;color:var(--rust);font-size:10px;letter-spacing:.16em;text-transform:uppercase}
+.featured-title{margin:5px 0 8px;font:34px/1.15 Georgia,serif}.featured-title a,.note-list a,.topic-list a{color:var(--paper)}.featured-title a:visited,.note-list a:visited,.topic-list a:visited{color:var(--paper)}
+.note-list,.topic-list{margin:0;padding:0;list-style:none}.note-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.note-list li{padding:16px;border:1px solid var(--rule);border-radius:10px;background:var(--panel);transition:transform .16s ease,border-color .16s ease}.note-list li:hover{transform:translateY(-2px);border-color:#647c68}.note-description{margin:6px 0 0;color:var(--muted);font-size:12px}.topic-label{color:var(--rust);font-size:10px;text-transform:uppercase;letter-spacing:.08em}
+.topic-list li{display:flex;justify-content:space-between;gap:18px;padding:10px 0;border-bottom:1px dashed var(--rule)}.topic-count{color:var(--muted);font-size:11px}
+.article-header,.prose{max-width:var(--reading)}.article-title{margin:6px 0 10px;font-size:clamp(36px,7vw,60px);line-height:1.02;letter-spacing:-.03em}.article-description{max-width:650px;color:#c7cec5;font:20px/1.45 Georgia,serif}
+.prose h2{margin-top:38px}.prose h3{margin-top:28px}.prose blockquote{margin:22px 0;padding:5px 0 5px 18px;border-left:3px solid var(--moss);color:#c8d0c7}.prose code,.prose pre,code,pre{font-family:inherit}.prose code{padding:2px 5px;border-radius:4px;background:#263129;color:#d9f7a6}.prose pre{overflow-x:auto;padding:16px;border:1px solid var(--rule);border-radius:10px;background:#0b100c;font-size:13px;line-height:1.55}.prose pre code{padding:0;background:transparent}
+footer{margin-top:44px;color:var(--muted);font-size:11px}.small{font-size:11px}.skip-link{position:absolute;left:-9999px}.skip-link:focus{left:12px;top:12px;z-index:10;padding:7px 10px;background:var(--paper);color:#111}
+@media(max-width:680px){body{padding:24px 16px 48px;font-size:14px}.note-list{grid-template-columns:1fr}.notice{padding:18px;font-size:18px}.article-title{font-size:38px}}
