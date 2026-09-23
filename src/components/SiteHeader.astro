@@ -4,10 +4,12 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 <header>
   <a class="skip-link" href="#content">skip to content</a>
   <h1><a class="site-title" href={base}>mika's open learning notebook</a></h1>
-  <p class="tagline">field notes from building things i don't fully understand yet</p>
+  <p class="tagline">field notes, essays, and things learned by building</p>
   <nav aria-label="Main navigation">
-    <a href={`${base}notes/`}>all notes</a><span class="sep">·</span>
+    <a href={`${base}notes/`}>field notes</a><span class="sep">·</span>
+    <a href={`${base}writing/`}>writing</a><span class="sep">·</span>
     <a href={`${base}topics/`}>map of topics</a><span class="sep">·</span>
+    <a href={`${base}projects/`}>projects</a><span class="sep">·</span>
     <a href={`${base}about/`}>about</a><span class="sep">·</span>
     <a href="https://github.com/miflow13/MikasOpenLearningNotebook">source ↗</a>
   </nav>
