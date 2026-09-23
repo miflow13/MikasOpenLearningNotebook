@@ -8,21 +8,6 @@ const latest = notes.filter((note)=>note.id!==featured?.id).slice(0,6);
 const topics=[...new Set(notes.map((note)=>note.data.topic))];
 ---
 <BaseLayout>
-  <section class="home-hero">
-    <div>
-      <p class="kicker">Mika's working notebook · continuously under construction</p>
-      <h2 class="hero-title">Learning by<br/><em>building the thing.</em></h2>
-      <p class="hero-copy">Not tutorials from the finish line. These are field notes from inside the work: what broke, what clicked, what I misunderstood, and the mental models I want to keep.</p>
-      <div class="hero-actions"><a class="primary-action" href={`${base}notes/`}>enter the notebook →</a><a href={`${base}topics/`}>browse the map</a></div>
-    </div>
-    <aside class="status-card">
-      <p class="kicker">notebook status</p>
-      <strong>{notes.length}</strong><span>notes collected</span>
-      <strong>{topics.length}</strong><span>topic trails</span>
-      <div class="status-line"><i></i> still learning</div>
-    </aside>
-  </section>
-
   {featured && <section class="pinboard">
     <div class="section-heading"><div><p class="kicker">pinned to the desk</p><h2>Current rabbit hole</h2></div><span class="scribble">← start here</span></div>
     <article class="featured-card">
