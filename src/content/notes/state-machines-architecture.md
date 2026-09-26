@@ -162,3 +162,62 @@ I should ask:
 - what should resume afterward?
 
 The important architectural rule is not "everything must be one enum." It is "each kind of state must have one clear owner, and transitions between layers must be explicit."
+
+
+## Persistent traits should not be modeled as behavior states
+
+Mochi's planned personality system clarified another state-modeling boundary.
+
+A behavior state answers:
+
+```text
+What is happening right now?
+```
+
+Examples:
+
+```text
+IDLE
+WALKING
+SLEEPING
+DRAGGED
+COMPUTER
+```
+
+A personality trait answers a different question:
+
+```text
+What tendency has developed over time?
+```
+
+For example, independent traits such as Curious, Playful, Cozy, Mischievous, and Focused can persist while the active behavior changes many times.
+
+A better relationship is:
+
+```text
+persistent personality/domain state
+        ↓ biases
+behavior selection
+        ↓ controls
+presentation / animation
+```
+
+That keeps long-term learned state from competing directly with temporary interaction state.
+
+## Learn from completed meaningful events, not noisy inputs
+
+If a persistent trait changes on every click, timer tick, hover, or transient animation, it will drift quickly and mostly learn noise.
+
+A safer model is to update long-term traits from **meaningful completed events**.
+
+Examples:
+
+- completing a focus session
+- choosing to interact repeatedly with a certain feature
+- consistently completing a type of activity over time
+
+The exact events depend on the product, but the architectural principle is stable:
+
+> persistent models should learn from lower-frequency evidence that actually represents the concept they are trying to model.
+
+This is another form of ownership: the event system observes what happened, the personality system decides whether it is meaningful, and the behavior system only receives the resulting bias.
