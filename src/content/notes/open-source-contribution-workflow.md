@@ -180,3 +180,38 @@ BeeWare/Toga is one useful practice target because it exposes me to a real Pytho
 ## Main lesson
 
 A good open-source contribution is focused, reproducible, tested, explainable, and respectful of the project that already exists. The work starts before the edit and continues through review.
+
+
+## Curating a first contribution is its own engineering/community task
+
+A `good first issue` label is only a hint. It does not guarantee that an issue is still open, unclaimed, sufficiently explained, or realistically scoped for a first-time contributor.
+
+A stronger curation pass checks:
+
+- current issue state
+- whether someone has already claimed it
+- contribution/setup instructions
+- expected stack and difficulty
+- enough context to begin without reverse-engineering the whole project
+- whether maintainers appear responsive to contributions
+
+This is the idea behind She[Ships] `first-ship`: reduce the uncertainty between "I want to contribute" and "I know what to do next."
+
+The lesson is that onboarding quality is part of open-source project quality.
+
+## GitHub organization permission != integration permission
+
+A GitHub organization can own repositories that I personally administer while a GitHub App or connected integration still receives:
+
+```text
+403 Resource not accessible by integration
+```
+
+That means I should separate two questions:
+
+1. **Can my GitHub account access this repository?**
+2. **Has this specific app/integration been authorized for the organization/repository?**
+
+Automation runs under its own granted identity and scope.
+
+When a tool can write to a personal repo but not an organization repo, inspect the app installation/authorization before assuming the repository permissions themselves are wrong.
