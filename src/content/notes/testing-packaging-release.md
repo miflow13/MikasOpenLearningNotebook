@@ -177,3 +177,50 @@ Release notes should distinguish:
 - live desktop QA still required
 
 That keeps confidence grounded in what was actually verified.
+
+
+## Test the second launch, not only the first launch
+
+A desktop application can pass a clean first launch and still fail when activated a second time.
+
+Mochi updater QA exposed a case where a second open could leave the app transparent/frozen.
+
+That makes these separate smoke tests:
+
+```text
+cold launch
+close/reopen
+second activation
+restart after update
+restart after failure/recovery
+```
+
+GTK/Gio application identity, surviving process state, stale window references, compositor state, and restart sequencing can all make later activations behave differently from the first one.
+
+"Launches successfully once" is therefore weaker evidence than it looks.
+
+## An updater is a release-and-recovery protocol
+
+A built-in updater should be designed as a stateful transition, not a download button.
+
+Useful stages are:
+
+```text
+check version
+→ reject unsafe downgrade
+→ stage update
+→ validate staged result
+→ restart/switch
+→ confirm healthy launch
+→ rollback/recover if needed
+```
+
+Important properties include:
+
+- do not destroy the known-good version before a replacement is ready
+- keep enough information to recover
+- guard against unintended downgrades
+- make restart behavior testable
+- test interruption/failure paths, not just the happy path
+
+The updater belongs to release engineering because it controls how a known-good installation becomes a new one without trapping the user in a broken state.
