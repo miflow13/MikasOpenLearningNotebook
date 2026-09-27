@@ -336,9 +336,16 @@ export function initRoadmapProgress(): void {
     }
 
     progress = imported.progress;
+    if (!progress.privacyNoticeSeen) {
+      announce('Your roadmap progress stays on this device. No account is required and your learning status is not uploaded anywhere.');
+      progress = { ...progress, privacyNoticeSeen: true };
+    }
     const saved = storage
       ? saveProgress(storage, progress)
       : { persistent: false, warning: 'Browser storage is unavailable.' };
+    if (!saved.persistent) {
+      announce('Progress works for this visit, but this browser is not allowing persistent storage.');
+    }
     skillIdsOnPage.forEach((skillId) => renderSkill(progress, skillId));
     renderRoadmapWorkspace(progress);
     syncPhaseDetails(progress);
