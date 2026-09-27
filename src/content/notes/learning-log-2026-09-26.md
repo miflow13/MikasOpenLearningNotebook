@@ -213,3 +213,110 @@ Today felt like a move from **building software** toward understanding the syste
 **community, permissions, lifecycle, recovery, long-term state, and evidence.**
 
 Shipping does not end when code runs. The surrounding system determines whether other people can trust it, contribute to it, recover from it, and understand what it is.
+
+## Late-day additions: architecture, portability, and Mochi Lab
+
+The rest of the day added several lessons that were worth preserving separately from the earlier community/updater work.
+
+### Composition bugs need production-shaped tests
+
+An Edge Roam failure looked correct in isolation but broke when Mochi's real mixins were composed together.
+
+The problem was method-resolution order: one mixin consumed an ambient hook before the mixin that needed it could see it.
+
+That clarified a useful rule:
+
+> A unit test can prove a class works by itself while the shipped object still fails because composition changes control flow.
+
+For mixin-heavy or plugin-style architectures, regression tests should instantiate the **same production composition** when the bug lives at a boundary.
+
+### Persistence failure should not become lifecycle failure
+
+Bond progression exposed another important boundary.
+
+XP could update correctly in memory, then a save could fail. If that storage exception escaped, it could interrupt level-up presentation or shutdown cleanup even though the actual domain transition had already happened.
+
+The safer model is:
+
+```text
+update durable state in memory
+→ mark it dirty
+→ attempt persistence
+→ if save fails, keep dirty state for retry
+→ continue presentation/cleanup
+→ clear dirty state only after a successful save
+```
+
+A persistence error is a storage problem. It should not replay rewards, roll back valid in-memory progression, or strand the application lifecycle.
+
+### Porting without owning the target hardware
+
+I explored how Mochi could eventually reach macOS without turning the project into two unrelated applications.
+
+The architecture that makes sense is:
+
+```text
+shared Python core
+(animation, state, behavior, persistence)
+        ↓
+platform backend boundary
+        ↓
+Linux: GTK/GDK
+macOS: AppKit/PyObjC
+```
+
+A lot can be tested without owning a Mac:
+
+- shared-core behavior on Linux
+- mocked window/input/media backend contracts
+- GitHub Actions on macOS runners
+- import/build tests
+- app-bundle creation
+- process-launch smoke tests
+
+But CI is not a substitute for physical UX verification. Transparency, Retina rendering, drag feel, Spaces, multi-monitor behavior, focus, right-click behavior, and always-on-top semantics still need a real Mac.
+
+### Mochi Lab: encode appearance rules as data
+
+The first appearance-system milestone reinforced a design principle I want to keep:
+
+**If an accessory should remain attached across animations, encode that relationship in frame/attachment metadata rather than scattering state-specific drawing exceptions through runtime code.**
+
+The milestone covered 76 animation frames and kept glasses, beanie, and scarf rendering through pickup/drop, drag, sleep/wake, bounce, squish, level-up, and side-eye paths.
+
+The validation results were strong—109 appearance/package tests and 869 non-display tests passing with one skip—but six unchanged headless GTK failures remained.
+
+That is a useful confidence boundary:
+
+> Headless test success is not Fedora/Wayland visual QA.
+
+### Git bundles are portable history, not magic synchronization
+
+I also imported a feature branch through a Git bundle.
+
+A bundle can carry commits and refs, but importing it does not automatically replace an existing local branch or remote-tracking relationship.
+
+The safe sequence is:
+
+```text
+verify bundle
+→ fetch bundle ref into a clearly named remote/ref
+→ inspect commit IDs
+→ switch/create the intended branch explicitly
+→ verify tracking and working-tree state
+```
+
+The recurring lesson is the same as everywhere else in Git: inspect the exact refs and SHAs instead of assuming what moved.
+
+## Added takeaway
+
+By the end of the day, "ownership" had become an even more useful systems question:
+
+- which mixin owns a hook?
+- which subsystem owns state?
+- which layer owns persistence failure?
+- which backend owns platform behavior?
+- which metadata owns attachment placement?
+- which ref actually points at the work I want?
+
+When ownership is vague, lifecycle bugs and integration bugs multiply.
