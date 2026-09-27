@@ -1,123 +1,57 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import MikaCurrentPin from '../components/MikaCurrentPin.astro';
-import { mikaJourney } from '../data/journey';
-import { roadmapPhases, roadmapTrails } from '../data/roadmap';
-import { parseLearningLogDate, sortJourneyEntries } from '../lib/journey-timeline';
 
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+const topicSlug = (value: string) => value
+  .toLowerCase()
+  .normalize('NFKD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .replace(/&/g, ' and ')
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-|-$/g, '');
 
-const notes = (await getCollection('notes', ({ data }) => !data.draft));
-const fieldNotes = notes
-  .filter((note) => !note.id.startsWith('learning-log-'))
+const notes = (await getCollection('notes', ({ data }) => !data.draft))
   .sort((a, b) => b.data.order - a.data.order);
-const latestFieldNote = fieldNotes[0];
 
-const learningLogs = sortJourneyEntries(
-  notes.filter((note) => note.id.startsWith('learning-log-'))
-);
-const latestLearningLog = learningLogs[0];
-
-const posts = (await getCollection('blog', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
-const latestWriting = posts[0];
-const postHref = latestWriting
-  ? latestWriting.data.externalUrl ?? `${base}writing/${latestWriting.id}/`
-  : undefined;
-const formatDate = (date: Date) => date.toLocaleDateString('en-US', {
-  year: 'numeric',
-  month: 'short',
-  day: '2-digit',
-  timeZone: 'UTC',
-});
+const topicNames = [...new Set(notes.map((note) => note.data.topic))].sort();
+const topics = topicNames.map((name) => ({
+  name,
+  slug: topicSlug(name),
+  count: notes.filter((note) => note.data.topic === name).length,
+}));
+const recent = notes.slice(0, 12);
 ---
-<BaseLayout title="Open Learning Notebook" description="A living, build-first roadmap for self-taught developers.">
-  <div class="home-flow">
-    <section class="roadmap-hero home-hero-section">
-      <p class="kicker">start here</p>
-      <h2>A living roadmap for self-taught developers.</h2>
-      <p class="hero-copy">Learn by building real things. Track what you understand. Follow my journey while I do the same.</p>
-      <div class="hero-links">
-        <a class="primary-link" href={`${base}roadmap/#where-to-start`}>Find where to start →</a>
-        <a href={`${base}roadmap/`}>Open the roadmap →</a>
-      </div>
-    </section>
+<BaseLayout title="Open Learning Notebook" description="Mika's public notebook of programming, Linux, software, debugging, and tooling notes.">
+  <section class="intro">
+    <h2>my learning of all the things</h2>
+    <p>This is my public notebook. I write down what I learn while building software, debugging things, reading documentation, and changing my mind about how something works.</p>
+    <p><a href={`${base}notes/`}>browse all entries</a> or start with a topic below.</p>
+  </section>
 
-    <section class="home-philosophy">
-      <p class="kicker">how learning works here</p>
-      <h2>Learn → Build → Break → Debug → Explain → Repeat</h2>
-      <p>The roadmap is organized around evidence, not reading completion. The useful question is not “did you finish the page?” but “can you use this, explain it, and recover when it breaks?”</p>
-    </section>
+  <section>
+    <h2>topics</h2>
+    <ul class="topic-list">
+      {topics.map((topic) => (
+        <li>
+          <a href={`${base}topics/${topic.slug}/`}>{topic.name}</a>
+          <span class="topic-count">{topic.count}</span>
+        </li>
+      ))}
+    </ul>
+  </section>
 
-    <section class="roadmap-preview home-roadmap-preview">
-      <p class="kicker">the guided spine</p>
-      <h2>A practical path, not a giant syllabus</h2>
-      <div class="roadmap-step-grid">
-        {roadmapPhases.map((phase) => (
-          <article>
-            <span>{phase.number}</span>
-            <h3>{phase.title}</h3>
-            <p>{phase.summary}</p>
-          </article>
-        ))}
-      </div>
-      <p><a href={`${base}roadmap/`}>Explore the full roadmap and evidence checkpoints →</a></p>
-    </section>
-
-    <section class="home-mika-pin">
-      <MikaCurrentPin state={mikaJourney} compact />
-      <p><a href={`${base}journey/`}>Follow my journey →</a></p>
-    </section>
-
-    <section class="home-trails">
-      <p class="kicker">branch without getting lost</p>
-      <h2>Choose trails based on what you want to build</h2>
-      <p>You can follow more than one. Trails change emphasis and recommendations without hiding the rest of the roadmap.</p>
-      <div class="home-trail-grid">
-        {roadmapTrails.map((trail) => (
-          <article>
-            <h3>{trail.title}</h3>
-            <p>{trail.summary}</p>
-          </article>
-        ))}
-      </div>
-      <p><a href={`${base}roadmap/#trails`}>Explore the trails →</a></p>
-    </section>
-
-    <section class="home-latest">
-      <p class="kicker">latest from the notebook</p>
-      <h2>What I'm learning and writing now</h2>
-      <div class="latest-notebook-grid">
-        {latestFieldNote && (
-          <article>
-            <span class="topic-label">field note · {latestFieldNote.data.topic}</span>
-            <h3><a href={`${base}notes/${latestFieldNote.id}/`}>{latestFieldNote.data.title}</a></h3>
-            <p>{latestFieldNote.data.description}</p>
-          </article>
-        )}
-        {latestLearningLog && (
-          <article>
-            <span class="topic-label">learning log · {parseLearningLogDate(latestLearningLog.id) ?? latestLearningLog.data.topic}</span>
-            <h3><a href={`${base}notes/${latestLearningLog.id}/`}>{latestLearningLog.data.title}</a></h3>
-            <p>{latestLearningLog.data.description}</p>
-          </article>
-        )}
-        {latestWriting && postHref && (
-          <article>
-            <span class="topic-label">writing · {formatDate(latestWriting.data.date)}</span>
-            <h3><a href={postHref}>{latestWriting.data.title}{latestWriting.data.externalUrl ? ' ↗' : ''}</a></h3>
-            <p>{latestWriting.data.description}</p>
-          </article>
-        )}
-      </div>
-    </section>
-
-    <section class="home-trust">
-      <p class="kicker">built in public</p>
-      <h2>This is a living roadmap, not a claim of mastery.</h2>
-      <p>I'm documenting what I learn, validating it through real projects and primary sources, and marking where my own experience is still limited. My progress is context for the resource—not the definition of what another learner should know.</p>
-      <p><a href={`${base}about/`}>About this project →</a> · <a href="https://github.com/miflow13/MikasOpenLearningNotebook">Source on GitHub ↗</a></p>
-    </section>
-  </div>
+  <section>
+    <h2>recent entries</h2>
+    <ul class="note-list">
+      {recent.map((note) => (
+        <li>
+          <span class="topic-label">{note.data.topic}</span>
+          <a href={`${base}notes/${note.id}/`}>{note.data.title}</a>
+          <p class="note-description">{note.data.description}</p>
+        </li>
+      ))}
+    </ul>
+    <p><a href={`${base}notes/`}>all entries →</a></p>
+  </section>
 </BaseLayout>
