@@ -799,3 +799,79 @@ hr{height:1px;margin:24px 0;border:0;border-top:1px solid var(--rule)}
   .js .reveal{opacity:1!important;transform:none!important;filter:none!important}
   .tilt-card,.tilt-card:hover{transform:none!important}
 }
+
+
+/* app header + microinteraction finishing layer */
+.header-brand-row{display:flex;align-items:flex-start;justify-content:space-between;gap:18px}
+.header-brand-copy{min-width:0}
+.learning-now{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  flex:0 0 auto;
+  margin-top:2px;
+  padding:7px 10px;
+  border:1px solid rgba(95,142,104,.20);
+  border-radius:999px;
+  background:rgba(231,242,231,.72);
+  color:var(--green-deep)!important;
+  font-size:11px;
+  font-weight:800;
+  text-decoration:none;
+  box-shadow:0 8px 20px rgba(54,107,67,.08);
+}
+.learning-now:hover{background:var(--green-soft);transform:translateY(-1px)}
+.learning-now-dot{
+  width:8px;height:8px;border-radius:50%;
+  background:var(--green);
+  box-shadow:0 0 0 0 rgba(95,142,104,.32);
+  animation:status-pulse 2.4s ease-out infinite;
+}
+
+.ripple-host{position:relative;overflow:hidden}
+.ui-ripple{
+  position:absolute;
+  width:12px;height:12px;
+  border-radius:50%;
+  background:rgba(255,255,255,.46);
+  pointer-events:none;
+  transform:translate(-50%,-50%) scale(0);
+  animation:ripple-out .62s ease-out forwards;
+}
+.roadmap-settings button .ui-ripple,.file-action .ui-ripple,.skill-card-link .ui-ripple{background:rgba(111,87,166,.16)}
+
+.roadmap-phase.is-open .roadmap-phase-details{transform:translateY(-2px)}
+.roadmap-phase.is-current-phase .roadmap-phase-details{animation:current-phase-glow 5.5s ease-in-out infinite}
+.skill-card.matches-selected-trail{animation:selected-card-breathe 6s ease-in-out infinite}
+
+@keyframes status-pulse{
+  0%{box-shadow:0 0 0 0 rgba(95,142,104,.34)}
+  72%,100%{box-shadow:0 0 0 8px rgba(95,142,104,0)}
+}
+@keyframes ripple-out{
+  from{transform:translate(-50%,-50%) scale(0);opacity:.9}
+  to{transform:translate(-50%,-50%) scale(18);opacity:0}
+}
+@keyframes current-phase-glow{
+  0%,100%{box-shadow:0 18px 48px rgba(54,107,67,.12),0 0 0 1px rgba(95,142,104,.08)}
+  50%{box-shadow:0 22px 58px rgba(54,107,67,.17),0 0 0 2px rgba(95,142,104,.12)}
+}
+@keyframes selected-card-breathe{
+  0%,100%{box-shadow:0 7px 18px rgba(49,37,58,.05)}
+  50%{box-shadow:0 12px 30px rgba(54,107,67,.10)}
+}
+
+@view-transition{navigation:auto}
+::view-transition-old(root){animation:.22s ease both page-out}
+::view-transition-new(root){animation:.34s cubic-bezier(.2,.8,.2,1) both page-in}
+@keyframes page-out{to{opacity:0;transform:translateY(-5px) scale(.995)}}
+@keyframes page-in{from{opacity:0;transform:translateY(7px) scale(.995)}}
+
+@media(max-width:680px){
+  .header-brand-row{display:block}
+  .learning-now{margin:8px 0 2px}
+}
+@media(prefers-reduced-motion:reduce){
+  .learning-now-dot,.roadmap-phase.is-current-phase .roadmap-phase-details,.skill-card.matches-selected-trail{animation:none!important}
+  ::view-transition-old(root),::view-transition-new(root){animation:none!important}
+}
