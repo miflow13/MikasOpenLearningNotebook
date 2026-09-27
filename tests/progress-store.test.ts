@@ -136,3 +136,23 @@ describe('learner-controlled progress updates', () => {
     expect(progress.lastActiveSkill).toBe('git-github');
   });
 });
+
+
+describe('roadmap preference updates', () => {
+  test('sets a starting phase without changing skill progress', async () => {
+    const { setStartingPoint } = await import('../src/lib/progress-store');
+    const progress = createEmptyProgress();
+    const next = setStartingPoint(progress, 'build');
+    expect(next.startingPoint).toBe('build');
+    expect(next.skills).toEqual({});
+    expect(progress.startingPoint).toBeUndefined();
+  });
+
+  test('stores multiple selected trails in the supplied order', async () => {
+    const { setSelectedTrails } = await import('../src/lib/progress-store');
+    const progress = createEmptyProgress();
+    const next = setSelectedTrails(progress, ['web', 'technical-writing']);
+    expect(next.selectedTrails).toEqual(['web', 'technical-writing']);
+    expect(progress.selectedTrails).toEqual([]);
+  });
+});
