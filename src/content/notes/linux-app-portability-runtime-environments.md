@@ -83,3 +83,42 @@ It does not prove universal Linux compatibility, but it tests assumptions I cann
 ## Main lesson
 
 Portability means identifying environment assumptions and turning them into explicit capability checks, optional paths, and accurate messages.
+
+## Cross-platform work can be layered even without target hardware
+
+Thinking about a Mochi macOS port clarified a general portability strategy.
+
+Keep product/domain logic behind a platform boundary:
+
+```text
+shared core
+→ abstract window/input/media contracts
+→ platform-specific implementation
+```
+
+For Mochi, that could mean keeping animation, state, behavior, persistence, focus, and personality in the Python core while Linux uses GTK/GDK and macOS uses AppKit through PyObjC.
+
+Without owning the target machine, CI can still verify a surprising amount:
+
+- imports
+- shared behavior contracts
+- mocked backend behavior
+- architecture-specific builds
+- app packaging
+- launch/process smoke tests
+
+But CI cannot completely validate experiential desktop behavior such as compositor appearance, high-DPI rendering, input feel, window stacking, workspaces, and multi-monitor behavior.
+
+A useful portability rule is:
+
+> Automate everything that can be made deterministic, then identify the smallest honest list of behaviors that still require real hardware.
+
+## Filesystem choice is part of runtime reality
+
+A separate Linux storage cleanup reinforced that not every mounted filesystem is an equal home for application state.
+
+NTFS is useful for portable/shared storage, but I should be cautious about moving Linux-native home state wholesale onto it.
+
+Keep things that depend heavily on Linux permissions, symlinks, locking, sockets, metadata, or application assumptions on a native Linux filesystem when possible, including active config/state trees and development environments.
+
+Move genuinely portable bulk data separately, and use dry-run/apply steps for broad migrations.
