@@ -2,6 +2,9 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import CareerContext from '../../components/CareerContext.astro';
+import CheckpointList from '../../components/CheckpointList.astro';
+import ConfidenceControl from '../../components/ConfidenceControl.astro';
+import ProgressNotice from '../../components/ProgressNotice.astro';
 import TrailBadge from '../../components/TrailBadge.astro';
 import {
   getSkillById,
@@ -38,11 +41,11 @@ const nextSkills = skill.next.map((id) => getSkillById(id)).filter(Boolean);
       )}
     </header>
 
+    <ProgressNotice />
     <section class="skill-confidence-preview" aria-labelledby="confidence-title">
       <p class="kicker">your learning</p>
       <h2 id="confidence-title">Choose your own confidence</h2>
-      <p class="confidence-states">🌱 Encountered · 🧪 Practicing · 🔨 Applied · 🧠 Can Explain · ✅ Comfortable</p>
-      <p class="small">Local progress controls are added in the next implementation stage. Reading this page never marks the skill complete.</p>
+      <ConfidenceControl skill={skill} />
     </section>
 
     <section class="skill-section">
@@ -63,16 +66,7 @@ const nextSkills = skill.next.map((id) => getSkillById(id)).filter(Boolean);
       <p>{skill.mentalModel}</p>
     </section>
 
-    <section class="skill-section" aria-labelledby="evidence-title">
-      <p class="kicker">evidence, not completion</p>
-      <h2 id="evidence-title">Prove you understand it</h2>
-      <ul class="evidence-list">
-        {skill.checkpoints.map((checkpoint) => (
-          <li><span aria-hidden="true">□</span> {checkpoint.label}</li>
-        ))}
-      </ul>
-      <p class="small">These are suggested pieces of evidence. Completing them does not automatically change your confidence state.</p>
-    </section>
+    <CheckpointList skill={skill} />
 
     {relatedNotes.length > 0 && (
       <section class="skill-section">
@@ -113,4 +107,8 @@ const nextSkills = skill.next.map((id) => getSkillById(id)).filter(Boolean);
       <p><a href={`${base}journey/`}>follow my current learning frontier →</a></p>
     </aside>
   </article>
+  <script>
+    import { initRoadmapProgress } from '../../scripts/roadmap-progress';
+    initRoadmapProgress();
+  </script>
 </BaseLayout>
