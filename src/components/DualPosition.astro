@@ -1,0 +1,23 @@
+---
+import type { PhaseId } from '../data/roadmap';
+import { getDualPositionCopy } from '../lib/journey-position';
+
+interface Props { mikaPhase: PhaseId; }
+const { mikaPhase } = Astro.props;
+const copy = getDualPositionCopy(undefined, mikaPhase);
+---
+<section class="dual-position" data-dual-position data-mika-phase={mikaPhase} aria-labelledby="dual-position-title">
+  <p class="kicker">same map, different path</p>
+  <h2 id="dual-position-title">Where we are</h2>
+  <div class="dual-position-grid">
+    <div class="dual-position-card" data-learner-position hidden>
+      <span class="topic-label">Your private position</span>
+      <strong data-learner-position-label></strong>
+    </div>
+    <div class="dual-position-card">
+      <span class="topic-label">Mika's public position</span>
+      <strong>{copy.mikaLabel}</strong>
+    </div>
+  </div>
+  <p class="dual-position-message">{copy.message}</p>
+</section>
