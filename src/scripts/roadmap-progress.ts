@@ -106,6 +106,12 @@ function renderPhaseActivity(progress: RoadmapProgressV1): void {
     const touched = skills.filter((skill) => skillTouched(progress, skill.id)).length;
     const label = phase.querySelector<HTMLElement>('[data-phase-activity]');
     if (label) label.textContent = `${touched} / ${skills.length} skills touched`;
+
+    const fill = phase.querySelector<HTMLElement>('[data-phase-progress]');
+    if (fill) {
+      const ratio = skills.length > 0 ? touched / skills.length : 0;
+      fill.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
+    }
   });
 }
 
