@@ -9,6 +9,7 @@ import {
 import { validateFieldNoteRefs } from '../src/data/roadmap-validation';
 import {
   getCareerContextForSkill,
+  getCareerSkills,
   getSkillRouteIds,
   getTrailLabelsForSkill,
 } from '../src/data/roadmap-routing';
@@ -73,5 +74,18 @@ describe('skill route data', () => {
   test('career context stays optional', () => {
     const skill = roadmapSkills.find((item) => item.id === 'terminal-filesystem')!;
     expect(getCareerContextForSkill(skill)).toBeUndefined();
+  });
+});
+
+
+describe('career roadmap selection', () => {
+  test('returns only skills with career context in canonical order', () => {
+    const ids = getCareerSkills().map((skill) => skill.id);
+    expect(ids).toContain('http-apis');
+    expect(ids).toContain('professional-practice');
+    expect(ids).not.toContain('terminal-filesystem');
+    expect(ids).toEqual(ids.slice().sort((a, b) =>
+      roadmapSkills.findIndex((skill) => skill.id === a) - roadmapSkills.findIndex((skill) => skill.id === b)
+    ));
   });
 });
