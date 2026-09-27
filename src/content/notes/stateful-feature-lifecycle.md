@@ -233,3 +233,36 @@ persistence boundary:
 ```
 
 If I cannot answer each one clearly, the feature probably does not have a clean lifecycle yet.
+
+## Persistence failure should preserve progress and lifecycle
+
+Bond progression taught me that persistence is another lifecycle boundary.
+
+A state transition can succeed in memory and then fail while saving. If the save exception controls the rest of the flow, the application can end up with a strange result:
+
+- progression happened
+- persistence failed
+- level-up/unlock presentation never finished
+- shutdown cleanup was interrupted
+- retrying risks replaying rewards
+
+The safer design is to separate **domain success** from **persistence success**.
+
+```text
+apply progression once
+→ mark state dirty
+→ attempt save
+→ on failure: keep dirty state and continue
+→ retry persistence later
+→ clear dirty flag only after successful save
+```
+
+Important consequences:
+
+- do not roll back valid in-memory progression just because storage failed
+- do not replay XP/rewards during a save retry
+- let level-up/unlock presentation complete independently
+- protect final shutdown persistence so cleanup still runs
+- make failed saves observable through logging/telemetry rather than lifecycle interruption
+
+This turns a disk/config failure into a recoverable storage problem instead of a feature-wide failure.
