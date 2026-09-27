@@ -7,6 +7,11 @@ import {
   type RoadmapSkill,
 } from '../src/data/roadmap';
 import { validateFieldNoteRefs } from '../src/data/roadmap-validation';
+import {
+  getCareerContextForSkill,
+  getSkillRouteIds,
+  getTrailLabelsForSkill,
+} from '../src/data/roadmap-routing';
 
 describe('roadmap helpers', () => {
   test('phase filtering preserves canonical roadmap order', () => {
@@ -50,5 +55,23 @@ describe('field-note reference validation', () => {
   test('accepts known field notes', () => {
     const skill = roadmapSkills.find((item) => item.id === 'git-github')!;
     expect(validateFieldNoteRefs([skill], new Set(skill.fieldNoteIds))).toEqual([]);
+  });
+});
+
+
+describe('skill route data', () => {
+  test('generates every and only canonical skill route id', () => {
+    expect(getSkillRouteIds()).toEqual(roadmapSkills.map((skill) => skill.id));
+    expect(getSkillRouteIds()).not.toContain('not-a-skill');
+  });
+
+  test('returns all labels for a multi-trail skill', () => {
+    const skill = roadmapSkills.find((item) => item.id === 'http-apis')!;
+    expect(getTrailLabelsForSkill(skill)).toEqual(['Web', 'AI / Agents', 'Technical Writing']);
+  });
+
+  test('career context stays optional', () => {
+    const skill = roadmapSkills.find((item) => item.id === 'terminal-filesystem')!;
+    expect(getCareerContextForSkill(skill)).toBeUndefined();
   });
 });
