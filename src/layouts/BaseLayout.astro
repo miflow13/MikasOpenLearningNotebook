@@ -21,21 +21,15 @@ const pageTitle = title === 'my learning of all the things' ? title : `${title} 
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
-    <meta name="theme-color" content="#f4f1ea" />
     <link rel="icon" type="image/svg+xml" href={`${import.meta.env.BASE_URL}favicon.svg`} />
     <title>{pageTitle}</title>
   </head>
   <body>
-    <div class="scroll-progress" aria-hidden="true"><span data-scroll-progress></span></div>
     <SiteHeader />
     <hr />
     <main id="content">
       <slot />
     </main>
     <SiteFooter />
-    <button class="back-to-top" type="button" data-back-to-top aria-label="Back to top" title="Back to top">↑</button>
-    <script>
-      import '../scripts/ui-motion';
-    </script>
   </body>
 </html>

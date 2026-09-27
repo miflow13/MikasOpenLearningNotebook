@@ -84,8 +84,7 @@ export function recommendNextSkill(
 
   if (progress.selectedTrails.length > 0) {
     const trailCandidates = skills.filter((skill) =>
-      skill.id !== currentSkillId
-      && !isComfortable(skill.id, progress)
+      !isComfortable(skill.id, progress)
       && skill.trails.some((trail) => progress.selectedTrails.includes(trail))
       && prerequisitesTouched(skill, progress)
     );
@@ -94,9 +93,7 @@ export function recommendNextSkill(
     }
   }
 
-  return skills.find((skill) =>
-    skill.id !== currentSkillId && !isComfortable(skill.id, progress)
-  )?.id;
+  return skills.find((skill) => !isComfortable(skill.id, progress))?.id;
 }
 
 export function getContinueSkill(

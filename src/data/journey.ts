@@ -51,22 +51,8 @@ export function validateJourneyState(state: MikaJourneyState): string[] {
   if (!state.recentMilestone.trim()) {
     errors.push('recent milestone is required');
   }
-  const dateMatch = /^(\d{4})-(\d{2})-(\d{2})$/.exec(state.updatedAt);
-  if (!dateMatch) {
-    errors.push('updatedAt must use a real YYYY-MM-DD calendar date');
-  } else {
-    const [, yearText, monthText, dayText] = dateMatch;
-    const year = Number(yearText);
-    const month = Number(monthText);
-    const day = Number(dayText);
-    const parsed = new Date(Date.UTC(year, month - 1, day));
-    const validCalendarDate =
-      parsed.getUTCFullYear() === year
-      && parsed.getUTCMonth() === month - 1
-      && parsed.getUTCDate() === day;
-    if (!validCalendarDate) {
-      errors.push('updatedAt must use a real YYYY-MM-DD calendar date');
-    }
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(state.updatedAt)) {
+    errors.push('updatedAt must use YYYY-MM-DD');
   }
 
   return errors;
