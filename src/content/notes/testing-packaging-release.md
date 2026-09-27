@@ -1,7 +1,7 @@
 ---
 title: "Testing, Packaging & Release Discipline"
 description: "A layered approach to unit tests, packaging, live validation, soak testing, and release discipline."
-topic: "Testing & Packaging"
+topic: "Testing & Release Engineering"
 order: 9
 featured: false
 draft: false
