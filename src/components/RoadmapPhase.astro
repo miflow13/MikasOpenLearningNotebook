@@ -6,18 +6,24 @@ interface Props {
   phase: RoadmapPhaseData;
   skills: RoadmapSkill[];
   base: string;
+  defaultOpen?: boolean;
 }
 
-const { phase, skills, base } = Astro.props;
+const { phase, skills, base, defaultOpen = false } = Astro.props;
 ---
 <section class="roadmap-phase" id={`phase-${phase.id}`} data-roadmap-phase={phase.id}>
-  <div class="phase-number">{phase.number}</div>
-  <div class="phase-content">
-    <p class="kicker">roadmap phase</p>
-    <h2>{phase.title}</h2>
-    <p>{phase.summary}</p>
+  <details class="roadmap-phase-details" data-phase-details open={defaultOpen}>
+    <summary class="roadmap-phase-summary">
+      <span class="phase-number">{phase.number}</span>
+      <span class="phase-summary-copy">
+        <span class="kicker">roadmap phase</span>
+        <span class="phase-title">{phase.title}</span>
+        <span class="phase-description">{phase.summary}</span>
+        <span class="phase-activity" data-phase-activity>0 / {skills.length} skills touched</span>
+      </span>
+    </summary>
     <div class="phase-skill-list">
       {skills.map((skill) => <SkillCard skill={skill} base={base} />)}
     </div>
-  </div>
+  </details>
 </section>
