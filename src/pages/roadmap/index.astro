@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import RoadmapPhase from '../../components/RoadmapPhase.astro';
 import {
   getSkillsForPhase,
   getSkillsForTrail,
@@ -12,7 +13,6 @@ import { validateFieldNoteRefs, validateRoadmap } from '../../data/roadmap-valid
 
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 const notes = await getCollection('notes', ({ data }) => !data.draft);
-const noteMap = new Map(notes.map((note) => [note.id, note]));
 const errors = [
   ...validateRoadmap(roadmapSkills, roadmapPhases, roadmapTrails),
   ...validateFieldNoteRefs(roadmapSkills, new Set(notes.map((note) => note.id))),
@@ -22,56 +22,38 @@ if (errors.length) throw new Error(`Invalid roadmap content:\n${errors.join('\n'
 <BaseLayout title="Self-taught developer roadmap" description="A practical, build-first roadmap for self-taught software developers.">
   <section class="roadmap-intro">
     <p class="kicker">start here</p>
-    <h2>Self-taught developer roadmap</h2>
-    <p>This is not a list of everything a software engineer could possibly know. It is a build-first path through the concepts that make it easier to create software, understand what it is doing, debug it when it breaks, and explain your decisions to someone else.</p>
+    <h2>An open roadmap for self-taught developers</h2>
+    <p>This is a living roadmap, not a claim of mastery. It is a build-first path through the concepts that make it easier to create software, understand what it is doing, debug it when it breaks, and explain your decisions to someone else.</p>
     <div class="roadmap-principle"><strong>The loop:</strong> learn enough → build something → break something → debug it → explain what happened → repeat.</div>
-    <p>You do not need to finish one phase perfectly before touching the next. Use the phases as orientation, then follow the problems your projects reveal.</p>
+    <p>You do not need to finish one phase perfectly before touching the next. Use the spine for orientation, then follow the problems your projects reveal.</p>
   </section>
 
   <section class="roadmap-status-key">
-    <p class="kicker">a better definition of progress</p>
-    <h2>Do not measure learning by pages read</h2>
-    <p>For any topic, a useful progression is <strong>🌱 encountered → 🧪 practicing → 🔨 applied → 🧠 can explain → ✅ comfortable</strong>. The goal is not memorization. The goal is increasingly independent reasoning.</p>
+    <p class="kicker">confidence, not completion</p>
+    <h2>Reading is not the finish line</h2>
+    <p><strong>🌱 Encountered → 🧪 Practicing → 🔨 Applied → 🧠 Can Explain → ✅ Comfortable.</strong> Proof checkpoints help you gather evidence; they do not decide your confidence for you.</p>
   </section>
 
   <div class="roadmap-phases">
     {roadmapPhases.map((phase) => (
-      <section class="roadmap-phase" id={`phase-${phase.id}`}>
-        <div class="phase-number">{phase.number}</div>
-        <div class="phase-content">
-          <p class="kicker">roadmap phase</p>
-          <h2>{phase.title}</h2>
-          <p>{phase.summary}</p>
-          <ul class="roadmap-note-list">
-            {getSkillsForPhase(phase.id).map((skill) => (
-              <li>
-                <strong>{skill.title}</strong>
-                <span>{skill.summary}</span>
-                {skill.fieldNoteIds.length > 0 && <small>
-                  field notes: {skill.fieldNoteIds.map((id, index) => {
-                    const note = noteMap.get(id);
-                    return note ? <><a href={`${base}notes/${note.id}/`}>{note.data.title}</a>{index < skill.fieldNoteIds.length - 1 ? ' · ' : ''}</> : null;
-                  })}
-                </small>}
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <RoadmapPhase phase={phase} skills={getSkillsForPhase(phase.id)} base={base} />
     ))}
   </div>
 
   <section class="specialization-section">
-    <p class="kicker">branch without losing the spine</p>
+    <p class="kicker">branch without getting lost</p>
     <h2>Choose trails based on what you want to build</h2>
-    <p>Trails reuse the same skills instead of creating separate curricula. A skill can belong to more than one trail.</p>
+    <p>Trails reuse the same skills instead of creating separate curricula. You can follow more than one and still see the whole roadmap.</p>
     <div class="trail-grid">
       {roadmapTrails.map((trail) => (
         <article class="trail-card">
+          <p class="topic-label">trail</p>
           <h3>{trail.title}</h3>
           <p>{trail.summary}</p>
           <ul>
-            {getSkillsForTrail(trail.id).map((skill) => <li>{skill.title}</li>)}
+            {getSkillsForTrail(trail.id).slice(0, 8).map((skill) => (
+              <li><a href={`${base}roadmap/${skill.id}/`}>{skill.title}</a></li>
+            ))}
           </ul>
         </article>
       ))}
@@ -81,7 +63,7 @@ if (errors.length) throw new Error(`Invalid roadmap content:\n${errors.join('\n'
   <section class="roadmap-next">
     <p class="kicker">the messy middle matters</p>
     <h2>Watch the roadmap get tested in real projects</h2>
-    <p>The field notes are the durable lessons. The journey is where I document what I am learning now, including mistakes, blind spots, bugs, and the things I thought I understood until a project proved otherwise.</p>
+    <p>The field notes are the durable lessons. The Journey is where I document what I am learning now, including mistakes, blind spots, bugs, and the things I thought I understood until a project proved otherwise.</p>
     <p><a href={`${base}journey/`}>follow the learning journey →</a> · <a href={`${base}projects/`}>see the projects behind the notes →</a></p>
   </section>
 </BaseLayout>
