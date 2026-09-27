@@ -224,3 +224,43 @@ Important properties include:
 - test interruption/failure paths, not just the happy path
 
 The updater belongs to release engineering because it controls how a known-good installation becomes a new one without trapping the user in a broken state.
+
+## Test the production composition, not only isolated parts
+
+Mochi exposed a regression where individual behavior worked in isolation but failed when the real mixin hierarchy was assembled.
+
+The failure came from method-resolution order: an earlier mixin consumed a hook before a later mixin could act on it.
+
+That means composition itself is something I need to test.
+
+For mixin-heavy, plugin-based, middleware, or dependency-injected systems, a useful regression ladder is:
+
+```text
+isolated unit
+→ subsystem composition
+→ production object composition
+→ live runtime
+```
+
+If the bug appeared only in the production object, a test that instantiates a simplified fake composition is weaker evidence.
+
+## Headless success is not visual-runtime success
+
+The Mochi Lab appearance work also reinforced a confidence boundary.
+
+A large non-display suite can verify:
+
+- attachment metadata
+- frame coverage
+- fallback behavior
+- package contents
+- rendering logic that does not require a compositor
+
+It still cannot prove:
+
+- alignment feels correct during drag
+- accessories visually crowd a pose
+- transparency/compositing looks right
+- GTK/Wayland behavior matches the desktop session
+
+Automated coverage and live visual QA should be reported separately rather than blended into one "tests passed" claim.
