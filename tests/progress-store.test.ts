@@ -156,3 +156,57 @@ describe('roadmap preference updates', () => {
     expect(progress.selectedTrails).toEqual([]);
   });
 });
+
+
+describe('progress portability', () => {
+  test('exports and imports a version-one document', async () => {
+    const { exportProgress, importProgress } = await import('../src/lib/progress-store');
+    let progress = setConfidence(createEmptyProgress(), 'git-github', 'applied', '2026-09-27T22:00:00.000Z');
+    const raw = exportProgress(progress);
+    expect(JSON.parse(raw).version).toBe(1);
+
+    const imported = importProgress(
+      raw,
+      new Set(['git-github']),
+      new Map([['git-github', new Set(['make-commit'])]]),
+    );
+    expect(imported.ok).toBe(true);
+    if (imported.ok) expect(imported.progress.skills['git-github'].confidence).toBe('applied');
+  });
+
+  test('rejects malformed JSON and future schema versions', async () => {
+    const { importProgress } = await import('../src/lib/progress-store');
+    expect(importProgress('{bad', new Set(), new Map()).ok).toBe(false);
+    expect(importProgress(JSON.stringify({
+      version: 2,
+      selectedTrails: [],
+      privacyNoticeSeen: false,
+      skills: {},
+    }), new Set(), new Map()).ok).toBe(false);
+  });
+
+  test('sanitizes unknown ids during import', async () => {
+    const { importProgress } = await import('../src/lib/progress-store');
+    const raw = JSON.stringify({
+      version: 1,
+      selectedTrails: [],
+      privacyNoticeSeen: true,
+      skills: {
+        known: { confidence: 'practicing', checkpoints: { keep: true, remove: true } },
+        removed: { confidence: 'comfortable', checkpoints: {} },
+      },
+    });
+    const imported = importProgress(raw, new Set(['known']), new Map([['known', new Set(['keep'])]]));
+    expect(imported.ok).toBe(true);
+    if (imported.ok) {
+      expect(imported.progress.skills).toEqual({
+        known: { confidence: 'practicing', checkpoints: { keep: true } },
+      });
+    }
+  });
+
+  test('reset returns a fresh empty document', async () => {
+    const { resetProgress } = await import('../src/lib/progress-store');
+    expect(resetProgress()).toEqual(createEmptyProgress());
+  });
+});
