@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import DualPosition from '../../components/DualPosition.astro';
 import JourneyMap from '../../components/JourneyMap.astro';
 import JourneyTimeline from '../../components/JourneyTimeline.astro';
 import MikaCurrentPin from '../../components/MikaCurrentPin.astro';
@@ -33,6 +34,7 @@ const entries = sortJourneyEntries(rawEntries).map((entry) => ({
 
   <JourneyMap state={mikaJourney} />
   <MikaCurrentPin state={mikaJourney} />
+  <DualPosition mikaPhase={mikaJourney.currentPhase} />
   <JourneyTimeline entries={entries} />
   <OpenQuestions questions={mikaJourney.currentQuestions} />
 
@@ -41,4 +43,8 @@ const entries = sortJourneyEntries(rawEntries).map((entry) => ({
     <h2>Journal first, extract the lesson second</h2>
     <p>A dated entry captures context. A field note captures the reusable idea. A project shows where the idea survived contact with reality. The roadmap connects those pieces so another self-taught developer can use them without having to copy my exact path.</p>
   </section>
+  <script>
+    import { initJourneyProgress } from '../../scripts/journey-progress';
+    initJourneyProgress();
+  </script>
 </BaseLayout>
