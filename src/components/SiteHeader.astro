@@ -3,8 +3,16 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 <header>
   <a class="skip-link" href="#content">skip to content</a>
-  <h1><a class="site-title" href={base}>mika's open learning notebook</a></h1>
-  <p class="tagline">a living roadmap for self-taught developers, documented while I learn</p>
+  <div class="header-brand-row">
+    <div class="header-brand-copy">
+      <h1><a class="site-title" href={base}>mika's open learning notebook</a></h1>
+      <p class="tagline">a living roadmap for self-taught developers, documented while I learn</p>
+    </div>
+    <a class="learning-now" href={`${base}journey/`} aria-label="See what Mika is learning now">
+      <span class="learning-now-dot" aria-hidden="true"></span>
+      learning now
+    </a>
+  </div>
   <nav aria-label="Main navigation">
     <a href={`${base}roadmap/`}>roadmap</a><span class="sep">·</span>
     <a href={`${base}notes/`}>field notes</a><span class="sep">·</span>
