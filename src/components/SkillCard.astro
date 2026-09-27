@@ -9,7 +9,12 @@ interface Props {
 
 const { skill, base } = Astro.props;
 ---
-<article class="skill-card">
+<article
+  class="skill-card"
+  data-skill-card
+  data-skill-id={skill.id}
+  data-trails={skill.trails.join(' ')}
+>
   <div class="skill-card-topline">
     <span class="topic-label">{skill.phase}</span>
     {skill.trails.length > 0 && (
@@ -20,5 +25,8 @@ const { skill, base } = Astro.props;
   </div>
   <h3><a href={`${base}roadmap/${skill.id}/`}>{skill.title}</a></h3>
   <p>{skill.summary}</p>
-  <a class="skill-card-link" href={`${base}roadmap/${skill.id}/`}>open skill →</a>
+  <div class="skill-card-footer">
+    <span class="skill-confidence-label" data-skill-confidence-status>Not started</span>
+    <a class="skill-card-link" href={`${base}roadmap/${skill.id}/`}>open skill →</a>
+  </div>
 </article>
