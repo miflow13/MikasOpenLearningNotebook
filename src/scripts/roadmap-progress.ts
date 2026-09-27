@@ -1,4 +1,4 @@
-import { roadmapSkills } from '../data/roadmap';
+import { roadmapSkills, type TrailId } from '../data/roadmap';
 import {
   createEmptyProgress,
   loadProgress,
@@ -6,8 +6,16 @@ import {
   saveProgress,
   setCheckpoint,
   setConfidence,
+  setSelectedTrails,
+  setStartingPoint,
   type RoadmapProgressV1,
 } from '../lib/progress-store';
+import {
+  getContinueSkill,
+  getOnboardingSuggestion,
+  recommendNextSkill,
+  type OnboardingChoice,
+} from '../lib/recommendations';
 import type { ConfidenceState } from '../lib/progress-types';
 
 const knownSkillIds = new Set(roadmapSkills.map((skill) => skill.id));
@@ -26,14 +34,30 @@ function announce(message: string): void {
   notice.hidden = false;
 }
 
+function browserStorage(): Storage | undefined {
+  try { return window.localStorage; } catch { return undefined; }
+}
+
+function persist(progress: RoadmapProgressV1, storage: Storage | undefined): RoadmapProgressV1 {
+  let next = progress;
+  if (!progress.privacyNoticeSeen) {
+    announce('Your roadmap progress stays on this device. No account is required and your learning status is not uploaded anywhere.');
+    next = { ...progress, privacyNoticeSeen: true };
+  }
+  const result = storage
+    ? saveProgress(storage, next)
+    : { persistent: false, warning: 'Browser storage is unavailable.' };
+  if (!result.persistent) {
+    announce('Progress works for this visit, but this browser is not allowing persistent storage.');
+  }
+  return next;
+}
+
 function renderSkill(progress: RoadmapProgressV1, skillId: string): void {
   const skillProgress = progress.skills[skillId];
-
   document.querySelectorAll<HTMLInputElement>(
     `[data-confidence-control][data-skill-id="${CSS.escape(skillId)}"] input[data-confidence]`,
-  ).forEach((input) => {
-    input.checked = input.value === skillProgress?.confidence;
-  });
+  ).forEach((input) => { input.checked = input.value === skillProgress?.confidence; });
 
   document.querySelectorAll<HTMLInputElement>(
     `input[data-checkpoint-id][data-skill-id="${CSS.escape(skillId)}"]`,
@@ -50,30 +74,84 @@ function renderSkill(progress: RoadmapProgressV1, skillId: string): void {
   });
 }
 
-function browserStorage(): Storage | undefined {
-  try {
-    return window.localStorage;
-  } catch {
-    return undefined;
-  }
+function renderRecommendedNext(progress: RoadmapProgressV1): void {
+  document.querySelectorAll<HTMLElement>('[data-recommended-next][data-current-skill]').forEach((container) => {
+    const currentSkillId = container.dataset.currentSkill;
+    const base = container.dataset.roadmapBase ?? '/';
+    const recommendedId = recommendNextSkill(currentSkillId, roadmapSkills, progress);
+    const recommended = roadmapSkills.find((skill) => skill.id === recommendedId);
+    container.replaceChildren();
+    if (!recommended || recommended.id === currentSkillId) return;
+
+    const label = document.createElement('p');
+    label.className = 'kicker';
+    label.textContent = 'recommended next';
+    const link = document.createElement('a');
+    link.href = `${base}roadmap/${recommended.id}/`;
+    link.textContent = recommended.title;
+    const description = document.createElement('p');
+    description.className = 'small';
+    description.textContent = recommended.summary;
+    container.append(label, link, description);
+  });
 }
 
-function persist(progress: RoadmapProgressV1, storage: Storage | undefined): RoadmapProgressV1 {
-  let next = progress;
-  const firstMutation = !progress.privacyNoticeSeen;
+function renderRoadmapWorkspace(progress: RoadmapProgressV1): void {
+  const workspace = document.querySelector<HTMLElement>('[data-roadmap-workspace]');
+  if (!workspace) return;
+  const base = workspace.dataset.roadmapBase ?? '/';
 
-  if (firstMutation) {
-    announce('Your roadmap progress stays on this device. No account is required and your learning status is not uploaded anywhere.');
-    next = { ...progress, privacyNoticeSeen: true };
+  const touched = Object.values(progress.skills).filter((skill) =>
+    Boolean(skill.confidence) || Object.values(skill.checkpoints).some(Boolean)
+  ).length;
+  const summary = workspace.querySelector<HTMLElement>('[data-progress-summary]');
+  if (summary) summary.textContent = `${touched} / ${roadmapSkills.length} skills touched`;
+
+  const continueId = getContinueSkill(roadmapSkills, progress);
+  const continueSkill = roadmapSkills.find((skill) => skill.id === continueId);
+  const continueLink = workspace.querySelector<HTMLAnchorElement>('[data-continue-link]');
+  if (continueLink && continueSkill) {
+    continueLink.href = `${base}roadmap/${continueSkill.id}/`;
+    continueLink.textContent = `Continue: ${continueSkill.title} →`;
+    continueLink.hidden = false;
   }
 
-  const result = storage
-    ? saveProgress(storage, next)
-    : { persistent: false, warning: 'Browser storage is unavailable.' };
-  if (!result.persistent) {
-    announce('Progress works for this visit, but this browser is not allowing persistent storage.');
+  workspace.querySelectorAll<HTMLInputElement>('[data-trail-input]').forEach((input) => {
+    input.checked = progress.selectedTrails.includes(input.value as TrailId);
+  });
+
+  const activePhase = progress.lastActiveSkill
+    ? roadmapSkills.find((skill) => skill.id === progress.lastActiveSkill)?.phase
+    : progress.startingPoint;
+  document.querySelectorAll<HTMLElement>('[data-roadmap-phase]').forEach((phase) => {
+    phase.classList.toggle('is-current-phase', phase.dataset.roadmapPhase === activePhase);
+  });
+}
+
+function showOnboardingSuggestion(choice: OnboardingChoice, base: string): { phase: RoadmapProgressV1['startingPoint'] } {
+  const suggestion = getOnboardingSuggestion(choice);
+  const result = document.querySelector<HTMLElement>('[data-onboarding-result]');
+  if (result) {
+    result.replaceChildren();
+    const heading = document.createElement('p');
+    heading.innerHTML = `<strong>Suggested start:</strong> ${suggestion.phase}`;
+    const list = document.createElement('ul');
+    suggestion.skillIds.forEach((id) => {
+      const skill = roadmapSkills.find((item) => item.id === id);
+      if (!skill) return;
+      const li = document.createElement('li');
+      const link = document.createElement('a');
+      link.href = `${base}roadmap/${skill.id}/`;
+      link.textContent = skill.title;
+      li.append(link);
+      list.append(li);
+    });
+    const note = document.createElement('p');
+    note.className = 'small';
+    note.textContent = 'This is only a suggestion. You can move anywhere on the roadmap.';
+    result.append(heading, list, note);
   }
-  return next;
+  return { phase: suggestion.phase };
 }
 
 export function initRoadmapProgress(): void {
@@ -96,16 +174,18 @@ export function initRoadmapProgress(): void {
     if (element.dataset.skillId) skillIdsOnPage.add(element.dataset.skillId);
   });
   skillIdsOnPage.forEach((skillId) => renderSkill(progress, skillId));
+  renderRoadmapWorkspace(progress);
+  renderRecommendedNext(progress);
 
   document.querySelectorAll<HTMLInputElement>('[data-confidence-control] input[data-confidence]').forEach((input) => {
     input.addEventListener('change', () => {
       if (!input.checked) return;
-      const container = input.closest<HTMLElement>('[data-confidence-control]');
-      const skillId = container?.dataset.skillId;
+      const skillId = input.closest<HTMLElement>('[data-confidence-control]')?.dataset.skillId;
       if (!skillId) return;
       progress = setConfidence(progress, skillId, input.value as ConfidenceState, new Date().toISOString());
       progress = persist(progress, storage);
       renderSkill(progress, skillId);
+      renderRecommendedNext(progress);
       document.dispatchEvent(new CustomEvent('roadmap:confidence-change', { detail: { skillId, confidence: input.value } }));
       document.dispatchEvent(new CustomEvent('roadmap:progress-saved', { detail: { skillId } }));
     });
@@ -119,8 +199,33 @@ export function initRoadmapProgress(): void {
       progress = setCheckpoint(progress, skillId, checkpointId, input.checked, new Date().toISOString());
       progress = persist(progress, storage);
       renderSkill(progress, skillId);
+      renderRecommendedNext(progress);
       document.dispatchEvent(new CustomEvent('roadmap:checkpoint-change', { detail: { skillId, checkpointId, checked: input.checked } }));
       document.dispatchEvent(new CustomEvent('roadmap:progress-saved', { detail: { skillId } }));
+    });
+  });
+
+  document.querySelectorAll<HTMLInputElement>('[data-onboarding-choice]').forEach((input) => {
+    input.addEventListener('change', () => {
+      if (!input.checked) return;
+      const workspace = document.querySelector<HTMLElement>('[data-roadmap-workspace]');
+      const base = workspace?.dataset.roadmapBase ?? '/';
+      const { phase } = showOnboardingSuggestion(input.value as OnboardingChoice, base);
+      if (!phase) return;
+      progress = setStartingPoint(progress, phase);
+      progress = persist(progress, storage);
+      renderRoadmapWorkspace(progress);
+    });
+  });
+
+  document.querySelectorAll<HTMLInputElement>('[data-trail-input]').forEach((input) => {
+    input.addEventListener('change', () => {
+      const selected = Array.from(document.querySelectorAll<HTMLInputElement>('[data-trail-input]:checked'))
+        .map((item) => item.value as TrailId);
+      progress = setSelectedTrails(progress, selected);
+      progress = persist(progress, storage);
+      renderRoadmapWorkspace(progress);
+      renderRecommendedNext(progress);
     });
   });
 }
