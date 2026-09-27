@@ -11,7 +11,8 @@ interface Props {
 
 const { phase, skills, base, defaultOpen = false } = Astro.props;
 ---
-<section class="roadmap-phase" id={`phase-${phase.id}`} data-roadmap-phase={phase.id}>
+<section class="roadmap-phase" id={`phase-${phase.id}`} data-roadmap-phase={phase.id} aria-labelledby={`phase-${phase.id}-heading`}>
+  <h2 class="visually-hidden" id={`phase-${phase.id}-heading`}>{phase.title}</h2>
   <details class="roadmap-phase-details" data-phase-details open={defaultOpen}>
     <summary class="roadmap-phase-summary">
       <span class="phase-number">{phase.number}</span>
