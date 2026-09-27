@@ -9,11 +9,19 @@ export async function getStaticPaths() {
 
 const { note } = Astro.props;
 const { Content } = await render(note);
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+const topicSlug = (value: string) => value
+  .toLowerCase()
+  .normalize('NFKD')
+  .replace(/[\u0300-\u036f]/g, '')
+  .replace(/&/g, ' and ')
+  .replace(/[^a-z0-9]+/g, '-')
+  .replace(/^-|-$/g, '');
 ---
 <BaseLayout title={note.data.title} description={note.data.description}>
   <article>
     <header class="article-header">
-      <p class="kicker">{note.data.topic}</p>
+      <p class="kicker"><a href={`${base}topics/${topicSlug(note.data.topic)}/`}>{note.data.topic}</a></p>
       <h2 class="article-title">{note.data.title}</h2>
       <p class="article-description">{note.data.description}</p>
     </header>
