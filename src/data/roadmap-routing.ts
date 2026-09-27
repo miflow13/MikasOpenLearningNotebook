@@ -19,3 +19,7 @@ export function getTrailLabelsForSkill(skill: RoadmapSkill): string[] {
 export function getCareerContextForSkill(skill: RoadmapSkill): CareerContextData | undefined {
   return skill.career;
 }
+
+export function getCareerSkills(): RoadmapSkill[] {
+  return roadmapSkills.filter((skill) => skill.career !== undefined);
+}
