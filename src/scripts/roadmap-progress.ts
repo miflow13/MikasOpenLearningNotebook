@@ -106,6 +106,12 @@ function renderPhaseActivity(progress: RoadmapProgressV1): void {
     const touched = skills.filter((skill) => skillTouched(progress, skill.id)).length;
     const label = phase.querySelector<HTMLElement>('[data-phase-activity]');
     if (label) label.textContent = `${touched} / ${skills.length} skills touched`;
+
+    const fill = phase.querySelector<HTMLElement>('[data-phase-progress]');
+    if (fill) {
+      const ratio = skills.length > 0 ? touched / skills.length : 0;
+      fill.style.transform = `scaleX(${Math.min(Math.max(ratio, 0), 1)})`;
+    }
   });
 }
 
@@ -330,9 +336,16 @@ export function initRoadmapProgress(): void {
     }
 
     progress = imported.progress;
+    if (!progress.privacyNoticeSeen) {
+      announce('Your roadmap progress stays on this device. No account is required and your learning status is not uploaded anywhere.');
+      progress = { ...progress, privacyNoticeSeen: true };
+    }
     const saved = storage
       ? saveProgress(storage, progress)
       : { persistent: false, warning: 'Browser storage is unavailable.' };
+    if (!saved.persistent) {
+      announce('Progress works for this visit, but this browser is not allowing persistent storage.');
+    }
     skillIdsOnPage.forEach((skillId) => renderSkill(progress, skillId));
     renderRoadmapWorkspace(progress);
     syncPhaseDetails(progress);

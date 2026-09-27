@@ -40,8 +40,12 @@ describe('Mika public journey state', () => {
       .toContain('current focus must contain 1 to 4 items');
   });
 
-  test('requires an ISO calendar date', () => {
+  test('requires a real ISO calendar date', () => {
     expect(validateJourneyState({ ...valid(), updatedAt: 'September 27' }))
-      .toContain('updatedAt must use YYYY-MM-DD');
+      .toContain('updatedAt must use a real YYYY-MM-DD calendar date');
+    expect(validateJourneyState({ ...valid(), updatedAt: '2026-02-31' }))
+      .toContain('updatedAt must use a real YYYY-MM-DD calendar date');
+    expect(validateJourneyState({ ...valid(), updatedAt: '2026-13-01' }))
+      .toContain('updatedAt must use a real YYYY-MM-DD calendar date');
   });
 });
