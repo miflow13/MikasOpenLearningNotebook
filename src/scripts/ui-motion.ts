@@ -123,6 +123,24 @@ function initDetailsMotion(): void {
   });
 }
 
+function initRipple(): void {
+  if (reducedMotion) return;
+
+  const targets = '.primary-link, .hero-links a, .roadmap-settings button, .file-action, .skill-card-link';
+  document.querySelectorAll<HTMLElement>(targets).forEach((element) => {
+    element.classList.add('ripple-host');
+    element.addEventListener('pointerdown', (event) => {
+      const rect = element.getBoundingClientRect();
+      const ripple = document.createElement('span');
+      ripple.className = 'ui-ripple';
+      ripple.style.left = `${event.clientX - rect.left}px`;
+      ripple.style.top = `${event.clientY - rect.top}px`;
+      element.append(ripple);
+      window.setTimeout(() => ripple.remove(), 650);
+    });
+  });
+}
+
 function initMagneticLinks(): void {
   if (reducedMotion || !finePointer) return;
 
@@ -147,6 +165,7 @@ export function initUiMotion(): void {
   initAmbientPointer();
   initDetailsMotion();
   initMagneticLinks();
+  initRipple();
 }
 
 initUiMotion();
