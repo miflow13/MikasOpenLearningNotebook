@@ -6,6 +6,8 @@ import {
   parseProgress,
   sanitizeProgress,
   saveProgress,
+  setCheckpoint,
+  setConfidence,
 } from '../src/lib/progress-store';
 
 class MemoryStorage {
@@ -104,5 +106,33 @@ describe('roadmap progress schema', () => {
     const result = saveProgress(storage, createEmptyProgress());
     expect(result.persistent).toBe(false);
     expect(result.warning).toBeTruthy();
+  });
+});
+
+
+describe('learner-controlled progress updates', () => {
+  test('sets confidence and records the active skill without touching checkpoints', () => {
+    const progress = createEmptyProgress();
+    const next = setConfidence(progress, 'git-github', 'practicing', '2026-09-27T22:30:00.000Z');
+    expect(next.skills['git-github']).toEqual({
+      confidence: 'practicing',
+      checkpoints: {},
+      lastTouchedAt: '2026-09-27T22:30:00.000Z',
+    });
+    expect(next.lastActiveSkill).toBe('git-github');
+    expect(progress.skills['git-github']).toBeUndefined();
+  });
+
+  test('checking every checkpoint does not automatically promote confidence', () => {
+    let progress = setConfidence(createEmptyProgress(), 'git-github', 'practicing', '2026-09-27T22:30:00.000Z');
+    progress = setCheckpoint(progress, 'git-github', 'make-commit', true, '2026-09-27T22:31:00.000Z');
+    progress = setCheckpoint(progress, 'git-github', 'merge-branch', true, '2026-09-27T22:32:00.000Z');
+
+    expect(progress.skills['git-github'].checkpoints).toEqual({
+      'make-commit': true,
+      'merge-branch': true,
+    });
+    expect(progress.skills['git-github'].confidence).toBe('practicing');
+    expect(progress.lastActiveSkill).toBe('git-github');
   });
 });
