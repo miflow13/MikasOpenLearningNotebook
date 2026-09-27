@@ -5,7 +5,7 @@ const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 
 const notes = (await getCollection('notes', ({ data }) => !data.draft)).sort((a,b)=>b.data.order-a.data.order);
 const featured = notes.find((note)=>note.data.featured) ?? notes[0];
-const latest = notes.filter((note)=>note.id!==featured?.id).slice(0,5);
+const latest = notes.filter((note)=>note.id!==featured?.id && !note.id.startsWith('learning-log-')).slice(0,5);
 const topics=[...new Set(notes.map((note)=>note.data.topic))];
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft))
@@ -15,6 +15,28 @@ const postHref = (post: (typeof posts)[number]) => post.data.externalUrl ?? `${b
 const formatDate = (date: Date) => date.toLocaleDateString('en-US',{year:'numeric',month:'short',day:'2-digit',timeZone:'UTC'});
 ---
 <BaseLayout>
+  <section class="roadmap-hero">
+    <p class="kicker">start here</p>
+    <h2>Learn by building the thing.</h2>
+    <p class="hero-copy">A living roadmap for self-taught developers. Follow the path when you need direction, jump into a field note when something is confusing, or read the journey to see what learning this stuff looks like in real time.</p>
+    <div class="hero-links">
+      <a class="primary-link" href={`${base}roadmap/`}>open the roadmap →</a>
+      <a href={`${base}journey/`}>follow the learning journey →</a>
+    </div>
+  </section>
+
+  <section class="roadmap-preview">
+    <p class="kicker">the spine</p>
+    <h2>A practical path, not a giant syllabus</h2>
+    <div class="roadmap-step-grid">
+      <article><span>01</span><h3>Foundations</h3><p>Terminal, Git, programming basics, and understanding how software actually runs.</p></article>
+      <article><span>02</span><h3>Build things</h3><p>Use languages, APIs, files, data, and frameworks to make useful software.</p></article>
+      <article><span>03</span><h3>Engineer it</h3><p>Debug, test, model state, recover from failure, and reason about performance.</p></article>
+      <article><span>04</span><h3>Ship it</h3><p>Package, deploy, document, contribute, and learn from real users and systems.</p></article>
+    </div>
+    <p><a href={`${base}roadmap/`}>see the full roadmap and competency checkpoints →</a></p>
+  </section>
+
   {featured && <section class="pinboard">
     <div class="section-heading"><div><p class="kicker">pinned to the desk</p><h2>Current rabbit hole</h2></div></div>
     <article class="featured-card">
@@ -23,7 +45,7 @@ const formatDate = (date: Date) => date.toLocaleDateString('en-US',{year:'numeri
   </section>}
 
   <section class="desk-section">
-    <div class="section-heading"><div><p class="kicker">latest entries</p><h2>Fresh from the workbench</h2></div><a href={`${base}notes/`}>view all {notes.length} →</a></div>
+    <div class="section-heading"><div><p class="kicker">durable notes</p><h2>Fresh from the workbench</h2></div><a href={`${base}notes/`}>view all {notes.length} →</a></div>
     <div class="home-note-grid">{latest.map((note)=><article class="home-note-card"><span class="topic-label">{note.data.topic}</span><h3><a href={`${base}notes/${note.id}/`}>{note.data.title}</a></h3><p>{note.data.description}</p></article>)}</div>
   </section>
 
@@ -33,8 +55,8 @@ const formatDate = (date: Date) => date.toLocaleDateString('en-US',{year:'numeri
   </section>}
 
   <section class="topic-map">
-    <p class="kicker">the messy map</p><h2>Follow a trail</h2>
+    <p class="kicker">branch off when you need to</p><h2>Follow a topic trail</h2>
     <div class="topic-cloud">{topics.map((topic)=><a href={`${base}topics/`}>{topic}</a>)}</div>
-    <p class="map-note">No curriculum. Just connections forming as I go.</p>
+    <p class="map-note">The roadmap gives direction. The topic map lets you wander.</p>
   </section>
 </BaseLayout>

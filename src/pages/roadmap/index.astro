@@ -1,0 +1,138 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+const notes = await getCollection('notes', ({ data }) => !data.draft);
+const noteMap = new Map(notes.map((note) => [note.id, note]));
+
+const phases = [
+  {
+    number: '01',
+    title: 'Foundations: understand the machine',
+    summary: 'Get comfortable enough with the terminal, source control, one programming language, and runtime basics that the computer stops feeling mysterious.',
+    learn: ['terminal and filesystem basics', 'Git and GitHub workflow', 'functions, data, control flow, and program structure', 'how code gets from source file to running process'],
+    prove: ['use Git without being afraid of losing work', 'trace which file and entry point actually runs', 'write and explain a small program without copying it line-for-line', 'recover from a mistake using logs, history, or version control'],
+    noteIds: ['linux-fedora-fundamentals', 'git-github-workflow', 'python-functions', 'code-tracing-runtime-paths', 'python-cli-entry-points-debugging'],
+  },
+  {
+    number: '02',
+    title: 'Build useful software',
+    summary: 'Turn syntax into working software by moving data through files, APIs, interfaces, frameworks, and small systems with an actual purpose.',
+    learn: ['project structure and boundaries', 'web requests and APIs', 'files, paths, persistence, and data flow', 'frameworks as tools rather than magic'],
+    prove: ['build a small tool that solves a real problem', 'integrate at least one external API or data source', 'persist and retrieve data safely', 'explain the path data takes through your application'],
+    noteIds: ['python-project-practices', 'javascript-typescript-react', 'web-apis-networking-sql', 'filesystem-backed-apps', 'content-systems-cms-data-pipelines'],
+  },
+  {
+    number: '03',
+    title: 'Engineer for change and failure',
+    summary: 'The jump from “it works” to engineering is learning how systems behave when requirements change, state gets complicated, or something breaks.',
+    learn: ['debugging by evidence', 'state machines and lifecycle design', 'testing at useful boundaries', 'idempotency, recovery, and failure handling', 'performance as observable behavior'],
+    prove: ['reproduce a bug before changing code', 'write a test that protects behavior you care about', 'model a non-trivial state transition explicitly', 'make a failed operation recoverable instead of destructive', 'measure before optimizing'],
+    noteIds: ['debugging-recovery', 'state-machines-architecture', 'stateful-feature-lifecycle', 'testing-packaging-release', 'idempotent-imports-deduplication', 'performance-interactive-apps'],
+  },
+  {
+    number: '04',
+    title: 'Ship and work in the real world',
+    summary: 'Learn the parts tutorials often skip: deployment, packaging, documentation, open-source workflow, production constraints, and handing software to someone else.',
+    learn: ['deployment and runtime environments', 'packaging and release discipline', 'documentation as part of the product', 'open-source collaboration', 'researching unfamiliar products from firsthand evidence'],
+    prove: ['ship something another person can run', 'document setup and troubleshooting from a clean starting point', 'make or review a pull request with a clear change story', 'diagnose an environment-specific failure', 'collect evidence from a real system instead of guessing'],
+    noteIds: ['deployment-debugging-vercel-serverless', 'linux-app-portability-runtime-environments', 'testing-packaging-release', 'open-source-contribution-workflow', 'firsthand-documentation-product-research', 'shipping-real-software'],
+  },
+];
+
+const trails = [
+  {
+    title: 'Linux desktop / native apps',
+    noteIds: ['gtk4-pygobject-wayland', 'gtk-application-lifecycle-gio-adw', 'desktop-pet-sdk-framework-extraction', 'desktop-pet-sdk-runtime-backends'],
+  },
+  {
+    title: 'Web / interactive worlds',
+    noteIds: ['javascript-typescript-react', 'threejs-spatial-worlds', 'content-systems-cms-data-pipelines', 'deployment-debugging-vercel-serverless'],
+  },
+  {
+    title: 'AI / agent systems',
+    noteIds: ['ai-skills-tools-agents-workflows', 'agent-systems-local-frontier-coordination', 'ravel-agent-behavior-evaluation', 'determinism-reproducibility-calibration'],
+  },
+  {
+    title: 'Technical writing / developer education',
+    noteIds: ['firsthand-documentation-product-research', 'issues-docs-planning', 'open-source-contribution-workflow', 'code-tracing-runtime-paths'],
+  },
+];
+
+const resolveNotes = (ids: string[]) => ids.map((id) => noteMap.get(id)).filter(Boolean);
+---
+<BaseLayout title="Self-taught developer roadmap" description="A practical, build-first roadmap for self-taught software developers.">
+  <section class="roadmap-intro">
+    <p class="kicker">start here</p>
+    <h2>Self-taught developer roadmap</h2>
+    <p>This is not a list of everything a software engineer could possibly know. It is a build-first path through the concepts that make it easier to create software, understand what it is doing, debug it when it breaks, and explain your decisions to someone else.</p>
+    <div class="roadmap-principle">
+      <strong>The loop:</strong> learn enough → build something → break something → debug it → explain what happened → repeat.
+    </div>
+    <p>You do not need to finish one phase perfectly before touching the next. Use the phases as orientation, then follow the problems your projects reveal.</p>
+  </section>
+
+  <section class="roadmap-status-key">
+    <p class="kicker">a better definition of progress</p>
+    <h2>Do not measure learning by pages read</h2>
+    <p>For any topic, a useful progression is <strong>🌱 learning → 🧪 practicing → 🔨 built with it → 🧠 can explain it → ✅ comfortable</strong>. The goal is not memorization. The goal is increasingly independent reasoning.</p>
+  </section>
+
+  <div class="roadmap-phases">
+    {phases.map((phase) => (
+      <section class="roadmap-phase" id={`phase-${phase.number}`}>
+        <div class="phase-number">{phase.number}</div>
+        <div class="phase-content">
+          <p class="kicker">roadmap phase</p>
+          <h2>{phase.title}</h2>
+          <p>{phase.summary}</p>
+          <div class="phase-columns">
+            <div>
+              <h3>Learn enough to use</h3>
+              <ul>{phase.learn.map((item) => <li>{item}</li>)}</ul>
+            </div>
+            <div>
+              <h3>Proof you understand it</h3>
+              <ul class="checkpoint-list">{phase.prove.map((item) => <li>{item}</li>)}</ul>
+            </div>
+          </div>
+          <h3>Field notes for this phase</h3>
+          <ul class="roadmap-note-list">
+            {resolveNotes(phase.noteIds).map((note) => note && (
+              <li>
+                <a href={`${base}notes/${note.id}/`}>{note.data.title}</a>
+                <span>{note.data.description}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+    ))}
+  </div>
+
+  <section class="specialization-section">
+    <p class="kicker">after the common spine</p>
+    <h2>Choose trails based on what you want to build</h2>
+    <p>Specialization makes more sense after you have enough shared foundation to debug and reason about software. These trails are drawn directly from projects I am building.</p>
+    <div class="trail-grid">
+      {trails.map((trail) => (
+        <article class="trail-card">
+          <h3>{trail.title}</h3>
+          <ul>
+            {resolveNotes(trail.noteIds).map((note) => note && (
+              <li><a href={`${base}notes/${note.id}/`}>{note.data.title}</a></li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </section>
+
+  <section class="roadmap-next">
+    <p class="kicker">the messy middle matters</p>
+    <h2>Then watch the roadmap get tested in real projects</h2>
+    <p>The field notes are the durable lessons. The journey is where I document what I am learning now, including mistakes, blind spots, bugs, and the things I thought I understood until a project proved otherwise.</p>
+    <p><a href={`${base}journey/`}>follow the learning journey →</a> · <a href={`${base}projects/`}>see the projects behind the notes →</a></p>
+  </section>
+</BaseLayout>

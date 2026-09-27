@@ -1,0 +1,36 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+const entries = (await getCollection('notes', ({ data }) => !data.draft))
+  .filter((note) => note.id.startsWith('learning-log-'))
+  .sort((a, b) => b.id.localeCompare(a.id));
+---
+<BaseLayout title="Learning journey" description="Dated learning logs from Mika's self-taught developer journey.">
+  <section>
+    <p class="kicker">learning in public</p>
+    <h2>The journey</h2>
+    <p>The roadmap is organized knowledge. This is the messy chronological version: what I built, what confused me, what broke, what finally clicked, and what I decided to learn next.</p>
+    <p>These entries are intentionally less polished than the field notes. When a lesson proves durable, I pull it out into a standalone note so someone else can find it without reading my entire history.</p>
+  </section>
+
+  <section class="journey-list-section">
+    <h2>Learning logs</h2>
+    <ol class="journey-list">
+      {entries.map((entry) => (
+        <li>
+          <span class="topic-label">{entry.data.topic}</span>
+          <h3><a href={`${base}notes/${entry.id}/`}>{entry.data.title}</a></h3>
+          <p>{entry.data.description}</p>
+        </li>
+      ))}
+    </ol>
+  </section>
+
+  <section class="journey-method">
+    <p class="kicker">how this becomes a resource</p>
+    <h2>Journal first, extract the lesson second</h2>
+    <p>A dated entry captures context. A field note captures the reusable idea. A project shows where the idea survived contact with reality. The roadmap connects those pieces so another self-taught developer can use them without having to copy my exact path.</p>
+  </section>
+</BaseLayout>
