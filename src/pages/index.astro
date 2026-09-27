@@ -50,11 +50,6 @@ const formatDate = (date: Date) => date.toLocaleDateString('en-US', {
       <p>The roadmap is organized around evidence, not reading completion. The useful question is not “did you finish the page?” but “can you use this, explain it, and recover when it breaks?”</p>
     </section>
 
-    <section class="home-mika-pin">
-      <MikaCurrentPin state={mikaJourney} compact />
-      <p><a href={`${base}journey/`}>Follow my journey →</a></p>
-    </section>
-
     <section class="roadmap-preview home-roadmap-preview">
       <p class="kicker">the guided spine</p>
       <h2>A practical path, not a giant syllabus</h2>
@@ -68,6 +63,11 @@ const formatDate = (date: Date) => date.toLocaleDateString('en-US', {
         ))}
       </div>
       <p><a href={`${base}roadmap/`}>Explore the full roadmap and evidence checkpoints →</a></p>
+    </section>
+
+    <section class="home-mika-pin">
+      <MikaCurrentPin state={mikaJourney} compact />
+      <p><a href={`${base}journey/`}>Follow my journey →</a></p>
     </section>
 
     <section class="home-trails">
