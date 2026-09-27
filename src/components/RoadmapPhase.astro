@@ -20,7 +20,12 @@ const { phase, skills, base, defaultOpen = false } = Astro.props;
         <span class="kicker">roadmap phase</span>
         <span class="phase-title">{phase.title}</span>
         <span class="phase-description">{phase.summary}</span>
-        <span class="phase-activity" data-phase-activity>0 / {skills.length} skills touched</span>
+        <span class="phase-activity">
+          <span data-phase-activity>0 / {skills.length} skills touched</span>
+          <span class="phase-progress-track" aria-hidden="true">
+            <span class="phase-progress-fill" data-phase-progress></span>
+          </span>
+        </span>
       </span>
     </summary>
     <div class="phase-skill-list">
