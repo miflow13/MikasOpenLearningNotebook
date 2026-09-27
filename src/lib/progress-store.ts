@@ -1,4 +1,4 @@
-import { roadmapPhases, roadmapTrails } from '../data/roadmap';
+import { roadmapPhases, roadmapTrails, type PhaseId, type TrailId } from '../data/roadmap';
 import type { ConfidenceState, RoadmapProgressV1, SkillProgress } from './progress-types';
 
 export type { ConfidenceState, RoadmapProgressV1, SkillProgress } from './progress-types';
@@ -203,4 +203,19 @@ export function setCheckpoint(
       },
     },
   };
+}
+
+
+export function setStartingPoint(
+  progress: RoadmapProgressV1,
+  startingPoint: PhaseId,
+): RoadmapProgressV1 {
+  return { ...progress, startingPoint };
+}
+
+export function setSelectedTrails(
+  progress: RoadmapProgressV1,
+  selectedTrails: TrailId[],
+): RoadmapProgressV1 {
+  return { ...progress, selectedTrails: [...selectedTrails] };
 }
