@@ -26,12 +26,14 @@ const pageTitle = title === 'my learning of all the things' ? title : `${title} 
     <title>{pageTitle}</title>
   </head>
   <body>
+    <div class="scroll-progress" aria-hidden="true"><span data-scroll-progress></span></div>
     <SiteHeader />
     <hr />
     <main id="content">
       <slot />
     </main>
     <SiteFooter />
+    <button class="back-to-top" type="button" data-back-to-top aria-label="Back to top" title="Back to top">↑</button>
     <script>
       import '../scripts/ui-motion';
     </script>
