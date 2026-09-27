@@ -219,3 +219,24 @@ export function setSelectedTrails(
 ): RoadmapProgressV1 {
   return { ...progress, selectedTrails: [...selectedTrails] };
 }
+
+export function exportProgress(progress: RoadmapProgressV1): string {
+  return JSON.stringify(progress, null, 2);
+}
+
+export function importProgress(
+  raw: string,
+  knownSkillIds: ReadonlySet<string>,
+  knownCheckpointIds: ReadonlyMap<string, ReadonlySet<string>>,
+): { ok: true; progress: RoadmapProgressV1 } | { ok: false; reason: string } {
+  const parsed = parseProgress(raw);
+  if (!parsed.ok) return parsed;
+  return {
+    ok: true,
+    progress: sanitizeProgress(parsed.value, knownSkillIds, knownCheckpointIds),
+  };
+}
+
+export function resetProgress(): RoadmapProgressV1 {
+  return createEmptyProgress();
+}
