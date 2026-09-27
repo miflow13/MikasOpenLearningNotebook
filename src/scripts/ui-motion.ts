@@ -3,6 +3,34 @@ const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matc
 
 document.documentElement.classList.add('js');
 
+
+function initScrollChrome(): void {
+  const progress = document.querySelector<HTMLElement>('[data-scroll-progress]');
+  const backToTop = document.querySelector<HTMLButtonElement>('[data-back-to-top]');
+  if (!progress && !backToTop) return;
+
+  const sync = () => {
+    const max = Math.max(document.documentElement.scrollHeight - window.innerHeight, 1);
+    const ratio = Math.min(Math.max(window.scrollY / max, 0), 1);
+
+    if (progress) {
+      progress.style.transform = `scaleX(${ratio})`;
+    }
+
+    if (backToTop) {
+      backToTop.classList.toggle('is-visible', window.scrollY > Math.min(520, window.innerHeight * 0.65));
+    }
+  };
+
+  sync();
+  window.addEventListener('scroll', sync, { passive: true });
+  window.addEventListener('resize', sync, { passive: true });
+
+  backToTop?.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: reducedMotion ? 'auto' : 'smooth' });
+  });
+}
+
 function initActiveNavigation(): void {
   const currentPath = window.location.pathname.replace(/\/+$/, '');
   document.querySelectorAll<HTMLAnchorElement>('header nav a').forEach((link) => {
@@ -158,6 +186,7 @@ function initMagneticLinks(): void {
 }
 
 export function initUiMotion(): void {
+  initScrollChrome();
   initActiveNavigation();
   initHeaderState();
   initReveal();
