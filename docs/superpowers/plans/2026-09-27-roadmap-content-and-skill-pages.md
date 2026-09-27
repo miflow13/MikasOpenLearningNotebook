@@ -176,7 +176,7 @@ git commit -m "feat: connect roadmap model to field notes"
 **Interfaces:**
 - Consumes: `RoadmapSkill`, `RoadmapPhase`, `RoadmapTrail`
 - Produces: static route `/roadmap/<skill-id>/` for every skill
-- Produces: skill page sections in this order: header, why this matters, what you need to know, mental model, evidence checkpoints, field notes, next directions, career context, From Mika's Notebook placeholder link area for Plan 3 integration
+- Produces: skill page sections in this order: header, why this matters, what you need to know, mental model, evidence checkpoints, field notes, next directions, career context, From Mika's Notebook integration area reserved for Plan 3
 
 - [ ] **Step 1: Add failing route-data tests**
 
