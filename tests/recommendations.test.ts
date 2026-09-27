@@ -40,6 +40,13 @@ describe('deterministic next-skill recommendations', () => {
     expect(recommendNextSkill('terminal-filesystem', roadmapSkills, progress)).toBe('programming-fundamentals');
   });
 
+  test('never falls back to recommending the current skill', () => {
+    let progress = createEmptyProgress();
+    progress = { ...progress, selectedTrails: ['web'] };
+    const next = recommendNextSkill('terminal-filesystem', roadmapSkills, progress);
+    expect(next).not.toBe('terminal-filesystem');
+  });
+
   test('breaks recommendation ties by canonical roadmap order', () => {
     const progress = createEmptyProgress();
     expect(recommendNextSkill(undefined, roadmapSkills, progress)).toBe('terminal-filesystem');
