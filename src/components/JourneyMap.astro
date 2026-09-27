@@ -1,0 +1,23 @@
+---
+import { roadmapPhases } from '../data/roadmap';
+import type { MikaJourneyState } from '../data/journey';
+
+interface Props { state: MikaJourneyState; }
+const { state } = Astro.props;
+---
+<section class="journey-map-section" aria-labelledby="journey-map-title">
+  <p class="kicker">where I am now</p>
+  <h2 id="journey-map-title">My open learning journey</h2>
+  <p>The pin marks where most of my learning energy is going right now. It does <strong>not</strong> mean every earlier phase is finished.</p>
+  <ol class="journey-map" aria-label="Four roadmap phases with Mika's current learning frontier">
+    {roadmapPhases.map((phase) => (
+      <li class:list={['journey-map-phase', { 'is-mika-current': phase.id === state.currentPhase }]}>
+        <span class="journey-map-number">{phase.number}</span>
+        <span class="journey-map-title">{phase.title}</span>
+        {phase.id === state.currentPhase && (
+          <span class="mika-map-pin" aria-label="Mika is currently focusing here">📍 Mika is here</span>
+        )}
+      </li>
+    ))}
+  </ol>
+</section>
