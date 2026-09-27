@@ -1,7 +1,10 @@
 import { roadmapSkills, type TrailId } from '../data/roadmap';
 import {
   createEmptyProgress,
+  exportProgress,
+  importProgress,
   loadProgress,
+  resetProgress,
   sanitizeProgress,
   saveProgress,
   setCheckpoint,
@@ -154,6 +157,11 @@ function showOnboardingSuggestion(choice: OnboardingChoice, base: string): { pha
   return { phase: suggestion.phase };
 }
 
+function setSettingsStatus(message: string): void {
+  const status = document.querySelector<HTMLElement>('[data-settings-status]');
+  if (status) status.textContent = message;
+}
+
 export function initRoadmapProgress(): void {
   if (typeof window === 'undefined') return;
 
@@ -228,4 +236,58 @@ export function initRoadmapProgress(): void {
       renderRecommendedNext(progress);
     });
   });
+
+  document.querySelector<HTMLButtonElement>('[data-export-progress]')?.addEventListener('click', () => {
+    const blob = new Blob([exportProgress(progress)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'mika-open-roadmap-progress.json';
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    setSettingsStatus('Progress exported as JSON.');
+  });
+
+  document.querySelector<HTMLInputElement>('[data-import-progress]')?.addEventListener('change', async (event) => {
+    const input = event.currentTarget as HTMLInputElement;
+    const file = input.files?.[0];
+    if (!file) return;
+    const imported = importProgress(await file.text(), knownSkillIds, knownCheckpointIds);
+    input.value = '';
+    if (!imported.ok) {
+      setSettingsStatus(`Import failed: ${imported.reason}. Your current progress was not changed.`);
+      return;
+    }
+
+    progress = imported.progress;
+    const saved = storage
+      ? saveProgress(storage, progress)
+      : { persistent: false, warning: 'Browser storage is unavailable.' };
+    skillIdsOnPage.forEach((skillId) => renderSkill(progress, skillId));
+    renderRoadmapWorkspace(progress);
+    renderRecommendedNext(progress);
+    setSettingsStatus(saved.persistent
+      ? 'Progress imported successfully.'
+      : 'Progress imported for this visit, but this browser is not allowing persistent storage.');
+  });
+
+  document.querySelector<HTMLButtonElement>('[data-reset-progress]')?.addEventListener('click', () => {
+    if (!window.confirm('Reset all local roadmap progress on this browser?')) return;
+    progress = resetProgress();
+    const saved = storage
+      ? saveProgress(storage, progress)
+      : { persistent: false, warning: 'Browser storage is unavailable.' };
+    skillIdsOnPage.forEach((skillId) => renderSkill(progress, skillId));
+    renderRoadmapWorkspace(progress);
+    renderRecommendedNext(progress);
+    const onboardingResult = document.querySelector<HTMLElement>('[data-onboarding-result]');
+    if (onboardingResult) onboardingResult.replaceChildren();
+    document.querySelectorAll<HTMLInputElement>('[data-onboarding-choice]').forEach((input) => { input.checked = false; });
+    setSettingsStatus(saved.persistent
+      ? 'Roadmap progress reset.'
+      : 'Progress reset for this visit, but this browser is not allowing persistent storage.');
+  });
+
 }
