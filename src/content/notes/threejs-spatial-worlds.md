@@ -42,3 +42,48 @@ WASD controls are not enough. People need landmarks, visible routes, current-loc
 ## What I can do now
 
 I can reason about a Three.js scene as a system rather than a pile of meshes: trace scene ownership, integrate GLB assets, diagnose collision and z-fighting problems, and make deliberate tradeoffs between visual density and rendering cost.
+
+## Technically correct can still be spatially wrong
+
+Oniria made this lesson painfully clear: an agent can produce code that is internally correct while the world is still visually wrong.
+
+A shelf can exist at the intended coordinates and still:
+
+- block a walking route
+- read as empty from player distance
+- face the wrong direction
+- destroy the intended density
+- make navigation confusing
+
+So spatial verification needs a human loop:
+
+```text
+implement
+→ enter the world
+→ walk the route
+→ observe from player height
+→ correct
+→ repeat
+```
+
+Screenshots and code inspection help, but they are not substitutes for moving through the environment.
+
+## Better tools can beat better prompts
+
+Repeatedly asking an agent to move world geometry by describing coordinates became inefficient.
+
+Building an in-world layout-marker/editor workflow was a better solution because it converted a fuzzy spatial instruction into inspectable data.
+
+This is a general engineering lesson:
+
+> When prompting becomes a lossy interface to the problem, improve the tool or representation instead of endlessly improving the prompt.
+
+## Persistent place, changing occupants
+
+The living-shelf system also clarified a useful data model.
+
+A shelf/slot can be a persistent **place**, while the article/book currently occupying that place changes from external signals.
+
+That separation makes the world feel stable without freezing its content.
+
+It is the spatial equivalent of separating component identity from changing data.
