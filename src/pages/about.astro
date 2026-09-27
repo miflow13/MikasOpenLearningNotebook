@@ -1,13 +1,14 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 ---
 <BaseLayout title="About" description="About Mika Flowers and the Open Learning Notebook.">
   <section>
     <p class="kicker">about this notebook</p>
     <h2>Hi, I'm Mika.</h2>
-    <p>I build small Linux things and write down what I learn while making them. This site is both my open learning journal and my personal writing home.</p>
-    <p>The field notes are the messy middle: bugs I traced, concepts that clicked, systems I misunderstood, and mental models I want to keep. Writing is where some of those threads become longer essays and articles.</p>
-    <p>The goal is not to pretend I know everything. It's to leave a useful trail of what I tried, what broke, what worked, and what I learned next.</p>
+    <p>I'm a self-taught developer learning by building real software and documenting the process in public. This site is both my learning journal and a resource for other people trying to find their way into software without a traditional computer-science path.</p>
+    <p>The <a href={`${base}roadmap/`}>roadmap</a> is the stable spine. Field notes turn hard-won lessons into reusable explanations. The <a href={`${base}journey/`}>journey</a> keeps the chronological mess: bugs I traced, concepts that clicked, systems I misunderstood, and the next questions my projects exposed.</p>
+    <p>I do not want to pretend expertise appears in a straight line. The useful part of self-teaching is often the moment a real project proves that your mental model is incomplete. I want to preserve those moments, then turn them into something another learner can use.</p>
     <p><a href="https://github.com/miflow13">github.com/miflow13</a> · <a href="https://dev.to/mikachu">DEV Community ↗</a></p>
   </section>
 </BaseLayout>
