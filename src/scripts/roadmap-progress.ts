@@ -26,6 +26,14 @@ const knownCheckpointIds = new Map(
   roadmapSkills.map((skill) => [skill.id, new Set(skill.checkpoints.map((checkpoint) => checkpoint.id))] as const),
 );
 
+const CONFIDENCE_LABELS: Record<ConfidenceState, string> = {
+  encountered: '🌱 Encountered',
+  practicing: '🧪 Practicing',
+  applied: '🔨 Applied',
+  'can-explain': '🧠 Can Explain',
+  comfortable: '✅ Comfortable',
+};
+
 function findNotice(): HTMLElement | null {
   return document.querySelector<HTMLElement>('[data-progress-notice]');
 }
@@ -58,6 +66,14 @@ function persist(progress: RoadmapProgressV1, storage: Storage | undefined): Roa
 
 function renderSkill(progress: RoadmapProgressV1, skillId: string): void {
   const skillProgress = progress.skills[skillId];
+
+  document.querySelectorAll<HTMLElement>(
+    `[data-skill-id="${CSS.escape(skillId)}"] [data-skill-confidence-status]`,
+  ).forEach((status) => {
+    status.textContent = skillProgress?.confidence
+      ? CONFIDENCE_LABELS[skillProgress.confidence]
+      : 'Not started';
+  });
   document.querySelectorAll<HTMLInputElement>(
     `[data-confidence-control][data-skill-id="${CSS.escape(skillId)}"] input[data-confidence]`,
   ).forEach((input) => { input.checked = input.value === skillProgress?.confidence; });
@@ -74,6 +90,47 @@ function renderSkill(progress: RoadmapProgressV1, skillId: string): void {
     `[data-checkpoint-list][data-skill-id="${CSS.escape(skillId)}"] [data-checkpoint-summary]`,
   ).forEach((summary) => {
     summary.textContent = `${completed} / ${skill?.checkpoints.length ?? 0} evidence checkpoints complete.`;
+  });
+}
+
+function skillTouched(progress: RoadmapProgressV1, skillId: string): boolean {
+  const skill = progress.skills[skillId];
+  return Boolean(skill?.confidence) || Object.values(skill?.checkpoints ?? {}).some(Boolean);
+}
+
+function renderPhaseActivity(progress: RoadmapProgressV1): void {
+  document.querySelectorAll<HTMLElement>('[data-roadmap-phase]').forEach((phase) => {
+    const phaseId = phase.dataset.roadmapPhase;
+    if (!phaseId) return;
+    const skills = roadmapSkills.filter((skill) => skill.phase === phaseId);
+    const touched = skills.filter((skill) => skillTouched(progress, skill.id)).length;
+    const label = phase.querySelector<HTMLElement>('[data-phase-activity]');
+    if (label) label.textContent = `${touched} / ${skills.length} skills touched`;
+  });
+}
+
+function renderTrailEmphasis(progress: RoadmapProgressV1): void {
+  const selected = new Set(progress.selectedTrails);
+  document.querySelectorAll<HTMLElement>('[data-skill-card]').forEach((card) => {
+    const trails = (card.dataset.trails ?? '').split(/\s+/).filter(Boolean);
+    card.classList.toggle(
+      'matches-selected-trail',
+      selected.size > 0 && trails.some((trail) => selected.has(trail as TrailId)),
+    );
+  });
+}
+
+function syncPhaseDetails(progress: RoadmapProgressV1): void {
+  const activePhase = progress.lastActiveSkill
+    ? roadmapSkills.find((skill) => skill.id === progress.lastActiveSkill)?.phase
+    : progress.startingPoint;
+
+  if (!activePhase) return;
+
+  document.querySelectorAll<HTMLElement>('[data-roadmap-phase]').forEach((phase) => {
+    const details = phase.querySelector<HTMLDetailsElement>('[data-phase-details]');
+    if (!details) return;
+    details.open = phase.dataset.roadmapPhase === activePhase;
   });
 }
 
@@ -129,6 +186,9 @@ function renderRoadmapWorkspace(progress: RoadmapProgressV1): void {
   document.querySelectorAll<HTMLElement>('[data-roadmap-phase]').forEach((phase) => {
     phase.classList.toggle('is-current-phase', phase.dataset.roadmapPhase === activePhase);
   });
+
+  renderPhaseActivity(progress);
+  renderTrailEmphasis(progress);
 }
 
 function showOnboardingSuggestion(choice: OnboardingChoice, base: string): { phase: RoadmapProgressV1['startingPoint'] } {
@@ -183,6 +243,7 @@ export function initRoadmapProgress(): void {
   });
   skillIdsOnPage.forEach((skillId) => renderSkill(progress, skillId));
   renderRoadmapWorkspace(progress);
+  syncPhaseDetails(progress);
   renderRecommendedNext(progress);
 
   document.querySelectorAll<HTMLInputElement>('[data-confidence-control] input[data-confidence]').forEach((input) => {
@@ -223,6 +284,7 @@ export function initRoadmapProgress(): void {
       progress = setStartingPoint(progress, phase);
       progress = persist(progress, storage);
       renderRoadmapWorkspace(progress);
+      syncPhaseDetails(progress);
     });
   });
 
@@ -267,6 +329,7 @@ export function initRoadmapProgress(): void {
       : { persistent: false, warning: 'Browser storage is unavailable.' };
     skillIdsOnPage.forEach((skillId) => renderSkill(progress, skillId));
     renderRoadmapWorkspace(progress);
+    syncPhaseDetails(progress);
     renderRecommendedNext(progress);
     setSettingsStatus(saved.persistent
       ? 'Progress imported successfully.'
@@ -281,6 +344,7 @@ export function initRoadmapProgress(): void {
       : { persistent: false, warning: 'Browser storage is unavailable.' };
     skillIdsOnPage.forEach((skillId) => renderSkill(progress, skillId));
     renderRoadmapWorkspace(progress);
+    syncPhaseDetails(progress);
     renderRecommendedNext(progress);
     const onboardingResult = document.querySelector<HTMLElement>('[data-onboarding-result]');
     if (onboardingResult) onboardingResult.replaceChildren();
