@@ -9,13 +9,12 @@ import { mikaJourney, validateJourneyState } from '../../data/journey';
 import { parseLearningLogDate, sortJourneyEntries } from '../../lib/journey-timeline';
 
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
-const journeyErrors = validateJourneyState(mikaJourney);
-if (journeyErrors.length) throw new Error(`Invalid Journey state:\n${journeyErrors.join('\n')}`);
+const errors = validateJourneyState(mikaJourney);
+if (errors.length) throw new Error(`Invalid public Journey state:\n${errors.join('\n')}`);
 
-const entries = sortJourneyEntries(
-  (await getCollection('notes', ({ data }) => !data.draft))
-    .filter((note) => note.id.startsWith('learning-log-'))
-).map((entry) => ({
+const rawEntries = (await getCollection('notes', ({ data }) => !data.draft))
+  .filter((note) => note.id.startsWith('learning-log-'));
+const entries = sortJourneyEntries(rawEntries).map((entry) => ({
   id: entry.id,
   title: entry.data.title,
   description: entry.data.description,
@@ -24,26 +23,22 @@ const entries = sortJourneyEntries(
   date: parseLearningLogDate(entry.id),
 }));
 ---
-<BaseLayout title="Learning journey" description="Mika's public learning frontier and chronological self-taught developer journey.">
+<BaseLayout title="Learning journey" description="Mika's public position and chronological learning logs on the self-taught developer roadmap.">
   <section class="journey-intro">
     <p class="kicker">learning in public</p>
     <h2>The journey</h2>
     <p>The roadmap is organized knowledge. This is the messy chronological version: what I built, what confused me, what broke, what finally clicked, and what I decided to learn next.</p>
-    <p><strong>You are not behind.</strong> I'm still on the map too. My position is public so another self-taught developer can see that the person maintaining this resource is still learning, revisiting fundamentals, and carrying open questions.</p>
+    <p><strong>You are not behind.</strong> I’m still on the map too. My pin shows where I am focusing right now, not a level another learner is supposed to reach.</p>
   </section>
 
   <JourneyMap state={mikaJourney} />
   <MikaCurrentPin state={mikaJourney} />
-
   <JourneyTimeline entries={entries} />
-
   <OpenQuestions questions={mikaJourney.currentQuestions} />
 
   <section class="journey-method">
     <p class="kicker">how this becomes a resource</p>
     <h2>Journal first, extract the lesson second</h2>
     <p>A dated entry captures context. A field note captures the reusable idea. A project shows where the idea survived contact with reality. The roadmap connects those pieces so another self-taught developer can use them without having to copy my exact path.</p>
-    <p><strong>Learning log → Field note → Project evidence → Roadmap.</strong></p>
-    <p><a href={`${base}roadmap/`}>open the roadmap →</a> · <a href={`${base}projects/`}>see the projects →</a></p>
   </section>
 </BaseLayout>
