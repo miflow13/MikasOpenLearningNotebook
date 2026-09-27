@@ -68,3 +68,55 @@ If I include those facts, I should make clear that they are observations from a 
 Good technical writing is not making an old guide sound cleaner.
 
 It is **re-validating the user's path through the real product** and refusing to invent the parts I have not confirmed.
+
+## Documentation is a tested workflow, not just prose
+
+Preparing for a technical-writing role helped me put a stronger name on the process I have already been practicing.
+
+A technical writer is often translating:
+
+```text
+messy engineering reality
+→ validated mental model
+→ information architecture
+→ tested user instructions
+```
+
+For installation/deployment documentation, a useful structure is:
+
+1. prerequisites
+2. environment assumptions
+3. installation/configuration
+4. verification
+5. troubleshooting
+6. rollback/recovery when relevant
+
+The key is **reproducibility**.
+
+If I cannot follow the instructions in a clean environment—or get an engineer/test environment to verify them—then polished wording is weak evidence.
+
+Good documentation quality can be evaluated with practical questions:
+
+- Can the intended user complete the task?
+- Are prerequisites explicit?
+- Is success verifiable?
+- Are likely failure modes documented?
+- Can readers find the right page?
+- Does the content match the current product/version?
+
+## AI-assisted documentation still needs evidence
+
+AI can help draft, reorganize, compare, summarize, or generate a first pass.
+
+The verification standard does not change.
+
+Important claims should still be checked against:
+
+- the product
+- source code
+- tests
+- API behavior
+- current official documentation
+- subject-matter experts
+
+AI is useful for accelerating the writing loop, but it should not become the authority for technical truth.
