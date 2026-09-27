@@ -104,3 +104,44 @@ The repository, runtime behavior, tests, and documentation are stronger evidence
 Do not ask one AI component to be everything.
 
 Use models for reasoning, skills for process, tools for evidence/actions, specialized agents for bounded roles, and runners for real execution.
+
+## AI can generate the implementation without owning the outcome
+
+Using an agent to write code does not remove engineering responsibility.
+
+A better definition of **ownership** is responsibility for the outcome:
+
+- understand the goal and acceptance criteria
+- give the agent enough context to work safely
+- inspect the implementation or diff
+- verify behavior with tests/runtime evidence
+- catch bad assumptions and regressions
+- decide whether the change is acceptable
+- maintain or repair it after it ships
+
+This creates an important distinction between two superficially similar workflows:
+
+```text
+prompt until something appears
+```
+
+and:
+
+```text
+specify
+→ agent implements
+→ inspect
+→ test
+→ reproduce failures
+→ correct
+→ verify
+→ accept
+```
+
+Both may involve very little manual typing. Only the second carries meaningful engineering ownership.
+
+The skill I want to grow is therefore not "type a larger percentage of the code myself." It is:
+
+> Increase the percentage of changes I can explain, verify, debug, and responsibly ship.
+
+That is a better measure of progress in an agentic workflow than character count.
