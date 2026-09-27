@@ -1,0 +1,24 @@
+---
+import type { RoadmapSkill } from '../data/roadmap';
+import TrailBadge from './TrailBadge.astro';
+
+interface Props {
+  skill: RoadmapSkill;
+  base: string;
+}
+
+const { skill, base } = Astro.props;
+---
+<article class="skill-card">
+  <div class="skill-card-topline">
+    <span class="topic-label">{skill.phase}</span>
+    {skill.trails.length > 0 && (
+      <div class="trail-badge-row" aria-label="Learning trails">
+        {skill.trails.map((trail) => <TrailBadge trail={trail} />)}
+      </div>
+    )}
+  </div>
+  <h3><a href={`${base}roadmap/${skill.id}/`}>{skill.title}</a></h3>
+  <p>{skill.summary}</p>
+  <a class="skill-card-link" href={`${base}roadmap/${skill.id}/`}>open skill →</a>
+</article>
