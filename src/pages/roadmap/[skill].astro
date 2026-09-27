@@ -85,6 +85,7 @@ const nextSkills = skill.next.map((id) => getSkillById(id)).filter(Boolean);
 
     {nextSkills.length > 0 && (
       <section class="skill-section">
+        <div class="recommended-next" data-recommended-next data-current-skill={skill.id} aria-live="polite"></div>
         <p class="kicker">keep moving</p>
         <h2>Next directions</h2>
         <ul class="next-skill-list">
