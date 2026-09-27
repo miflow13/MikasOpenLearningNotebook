@@ -50,7 +50,15 @@ function renderSkill(progress: RoadmapProgressV1, skillId: string): void {
   });
 }
 
-function persist(progress: RoadmapProgressV1): RoadmapProgressV1 {
+function browserStorage(): Storage | undefined {
+  try {
+    return window.localStorage;
+  } catch {
+    return undefined;
+  }
+}
+
+function persist(progress: RoadmapProgressV1, storage: Storage | undefined): RoadmapProgressV1 {
   let next = progress;
   const firstMutation = !progress.privacyNoticeSeen;
 
@@ -59,7 +67,9 @@ function persist(progress: RoadmapProgressV1): RoadmapProgressV1 {
     next = { ...progress, privacyNoticeSeen: true };
   }
 
-  const result = saveProgress(window.localStorage, next);
+  const result = storage
+    ? saveProgress(storage, next)
+    : { persistent: false, warning: 'Browser storage is unavailable.' };
   if (!result.persistent) {
     announce('Progress works for this visit, but this browser is not allowing persistent storage.');
   }
@@ -69,7 +79,10 @@ function persist(progress: RoadmapProgressV1): RoadmapProgressV1 {
 export function initRoadmapProgress(): void {
   if (typeof window === 'undefined') return;
 
-  const loaded = loadProgress(window.localStorage);
+  const storage = browserStorage();
+  const loaded = storage
+    ? loadProgress(storage)
+    : { progress: createEmptyProgress(), persistent: false, warning: 'Browser storage is unavailable.' };
   let progress = sanitizeProgress(loaded.progress, knownSkillIds, knownCheckpointIds);
 
   if (!loaded.persistent) {
@@ -91,7 +104,7 @@ export function initRoadmapProgress(): void {
       const skillId = container?.dataset.skillId;
       if (!skillId) return;
       progress = setConfidence(progress, skillId, input.value as ConfidenceState, new Date().toISOString());
-      progress = persist(progress);
+      progress = persist(progress, storage);
       renderSkill(progress, skillId);
       document.dispatchEvent(new CustomEvent('roadmap:confidence-change', { detail: { skillId, confidence: input.value } }));
       document.dispatchEvent(new CustomEvent('roadmap:progress-saved', { detail: { skillId } }));
@@ -104,7 +117,7 @@ export function initRoadmapProgress(): void {
       const checkpointId = input.dataset.checkpointId;
       if (!skillId || !checkpointId) return;
       progress = setCheckpoint(progress, skillId, checkpointId, input.checked, new Date().toISOString());
-      progress = persist(progress);
+      progress = persist(progress, storage);
       renderSkill(progress, skillId);
       document.dispatchEvent(new CustomEvent('roadmap:checkpoint-change', { detail: { skillId, checkpointId, checked: input.checked } }));
       document.dispatchEvent(new CustomEvent('roadmap:progress-saved', { detail: { skillId } }));
