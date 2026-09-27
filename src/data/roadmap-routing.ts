@@ -23,7 +23,3 @@ export function getCareerContextForSkill(skill: RoadmapSkill): CareerContextData
 export function getCareerSkills(): RoadmapSkill[] {
   return roadmapSkills.filter((skill) => skill.career !== undefined);
 }
-
-export function getCareerSkills(): RoadmapSkill[] {
-  return roadmapSkills.filter((skill) => Boolean(skill.career));
-}
