@@ -1,7 +1,7 @@
 ---
 title: "Deployment Debugging: Code, Routes, Platforms & Domains"
 description: "What a Forem-powered README card taught me about debugging serverless deployments one layer at a time."
-topic: "Web Development"
+topic: "Infrastructure & Deployment"
 order: 30
 featured: false
 draft: false
