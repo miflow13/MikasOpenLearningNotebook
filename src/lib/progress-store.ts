@@ -153,3 +153,54 @@ export function sanitizeProgress(
     skills,
   };
 }
+
+function currentSkillProgress(progress: RoadmapProgressV1, skillId: string): SkillProgress {
+  return progress.skills[skillId] ?? { checkpoints: {} };
+}
+
+export function setConfidence(
+  progress: RoadmapProgressV1,
+  skillId: string,
+  confidence: ConfidenceState,
+  nowIso: string,
+): RoadmapProgressV1 {
+  const current = currentSkillProgress(progress, skillId);
+  return {
+    ...progress,
+    lastActiveSkill: skillId,
+    skills: {
+      ...progress.skills,
+      [skillId]: {
+        ...current,
+        confidence,
+        checkpoints: { ...current.checkpoints },
+        lastTouchedAt: nowIso,
+      },
+    },
+  };
+}
+
+export function setCheckpoint(
+  progress: RoadmapProgressV1,
+  skillId: string,
+  checkpointId: string,
+  checked: boolean,
+  nowIso: string,
+): RoadmapProgressV1 {
+  const current = currentSkillProgress(progress, skillId);
+  return {
+    ...progress,
+    lastActiveSkill: skillId,
+    skills: {
+      ...progress.skills,
+      [skillId]: {
+        ...current,
+        checkpoints: {
+          ...current.checkpoints,
+          [checkpointId]: checked,
+        },
+        lastTouchedAt: nowIso,
+      },
+    },
+  };
+}
