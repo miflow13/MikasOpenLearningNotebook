@@ -121,11 +121,9 @@ function renderTrailEmphasis(progress: RoadmapProgressV1): void {
 }
 
 function syncPhaseDetails(progress: RoadmapProgressV1): void {
-  const activePhase = progress.lastActiveSkill
+  const activePhase = (progress.lastActiveSkill
     ? roadmapSkills.find((skill) => skill.id === progress.lastActiveSkill)?.phase
-    : progress.startingPoint;
-
-  if (!activePhase) return;
+    : progress.startingPoint) ?? 'foundations';
 
   document.querySelectorAll<HTMLElement>('[data-roadmap-phase]').forEach((phase) => {
     const details = phase.querySelector<HTMLDetailsElement>('[data-phase-details]');
@@ -174,6 +172,8 @@ function renderRoadmapWorkspace(progress: RoadmapProgressV1): void {
     continueLink.href = `${base}roadmap/${continueSkill.id}/`;
     continueLink.textContent = `Continue: ${continueSkill.title} →`;
     continueLink.hidden = false;
+  } else if (continueLink) {
+    continueLink.hidden = true;
   }
 
   workspace.querySelectorAll<HTMLInputElement>('[data-trail-input]').forEach((input) => {
