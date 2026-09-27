@@ -165,7 +165,13 @@ function renderRoadmapWorkspace(progress: RoadmapProgressV1): void {
   const summary = workspace.querySelector<HTMLElement>('[data-progress-summary]');
   if (summary) summary.textContent = `${touched} / ${roadmapSkills.length} skills touched`;
 
-  const continueId = getContinueSkill(roadmapSkills, progress);
+  const hasLearnerState = Boolean(
+    progress.lastActiveSkill
+    || progress.startingPoint
+    || progress.selectedTrails.length > 0
+    || Object.keys(progress.skills).length > 0
+  );
+  const continueId = hasLearnerState ? getContinueSkill(roadmapSkills, progress) : undefined;
   const continueSkill = roadmapSkills.find((skill) => skill.id === continueId);
   const continueLink = workspace.querySelector<HTMLAnchorElement>('[data-continue-link]');
   if (continueLink && continueSkill) {
