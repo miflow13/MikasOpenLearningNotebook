@@ -1,0 +1,23 @@
+---
+import type { RoadmapPhase as RoadmapPhaseData, RoadmapSkill } from '../data/roadmap';
+import SkillCard from './SkillCard.astro';
+
+interface Props {
+  phase: RoadmapPhaseData;
+  skills: RoadmapSkill[];
+  base: string;
+}
+
+const { phase, skills, base } = Astro.props;
+---
+<section class="roadmap-phase" id={`phase-${phase.id}`}>
+  <div class="phase-number">{phase.number}</div>
+  <div class="phase-content">
+    <p class="kicker">roadmap phase</p>
+    <h2>{phase.title}</h2>
+    <p>{phase.summary}</p>
+    <div class="phase-skill-list">
+      {skills.map((skill) => <SkillCard skill={skill} base={base} />)}
+    </div>
+  </div>
+</section>
