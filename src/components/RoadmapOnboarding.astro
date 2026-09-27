@@ -1,0 +1,26 @@
+---
+const choices = [
+  { id: 'brand-new', label: "I'm brand new to programming" },
+  { id: 'basics-struggle-build', label: 'I know the basics, but I struggle to build things' },
+  { id: 'build-debugging-shaky', label: 'I can build things, but debugging or architecture is shaky' },
+  { id: 'ship-fill-gaps', label: 'I already ship projects and want to fill gaps' },
+] as const;
+---
+<details class="roadmap-onboarding" id="where-to-start" data-onboarding>
+  <summary>Where should I start?</summary>
+  <div class="onboarding-body">
+    <p>Pick the sentence that feels closest. This only suggests a starting point; it does not grade you or lock the roadmap.</p>
+    <fieldset>
+      <legend class="small">What describes you best?</legend>
+      <div class="onboarding-options">
+        {choices.map((choice) => (
+          <label>
+            <input type="radio" name="roadmap-start" value={choice.id} data-onboarding-choice />
+            <span>{choice.label}</span>
+          </label>
+        ))}
+      </div>
+    </fieldset>
+    <div class="onboarding-result" data-onboarding-result aria-live="polite"></div>
+  </div>
+</details>
