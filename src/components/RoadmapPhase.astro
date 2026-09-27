@@ -1,0 +1,30 @@
+---
+import type { RoadmapPhase as RoadmapPhaseData, RoadmapSkill } from '../data/roadmap';
+import SkillCard from './SkillCard.astro';
+
+interface Props {
+  phase: RoadmapPhaseData;
+  skills: RoadmapSkill[];
+  base: string;
+  defaultOpen?: boolean;
+}
+
+const { phase, skills, base, defaultOpen = false } = Astro.props;
+---
+<section class="roadmap-phase" id={`phase-${phase.id}`} data-roadmap-phase={phase.id} aria-labelledby={`phase-${phase.id}-heading`}>
+  <h2 class="visually-hidden" id={`phase-${phase.id}-heading`}>{phase.title}</h2>
+  <details class="roadmap-phase-details" data-phase-details open={defaultOpen}>
+    <summary class="roadmap-phase-summary">
+      <span class="phase-number">{phase.number}</span>
+      <span class="phase-summary-copy">
+        <span class="kicker">roadmap phase</span>
+        <span class="phase-title">{phase.title}</span>
+        <span class="phase-description">{phase.summary}</span>
+        <span class="phase-activity" data-phase-activity>0 / {skills.length} skills touched</span>
+      </span>
+    </summary>
+    <div class="phase-skill-list">
+      {skills.map((skill) => <SkillCard skill={skill} base={base} />)}
+    </div>
+  </details>
+</section>

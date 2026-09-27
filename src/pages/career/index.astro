@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { careerSections } from '../../data/career';
+
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+const groundingLabel = {
+  firsthand: 'grounded in projects, client work, or open-source practice',
+  mixed: 'a mix of firsthand practice and external professional guidance',
+  'externally-grounded': 'currently grounded mainly in primary sources and experienced practitioner guidance',
+} as const;
+---
+<BaseLayout title="Career & professional practice" description="Professional-practice guidance connected to the self-taught developer roadmap.">
+  <section class="career-intro">
+    <p class="kicker">career & professional practice</p>
+    <h2>Turn learning into work other people can trust</h2>
+    <p>This section connects the technical roadmap to portfolios, interviews, collaboration, documentation, and production-minded habits. It is not an employment formula and it does not promise outcomes.</p>
+    <div class="roadmap-principle">
+      <strong>Experience note:</strong> my firsthand evidence currently comes from independent projects, freelance/client work, open source, documentation work, and interviewing. Sustained experience inside a production engineering team is still a gap I am actively working to close. Where I write beyond firsthand experience, I ground the guidance in primary documentation and experienced practitioner sources.
+    </div>
+    <p><a href={`${base}roadmap/professional-practice/`}>open the Professional Practice skill →</a></p>
+  </section>
+
+  <div class="career-section-grid">
+    {careerSections.map((section) => (
+      <section class="career-practice-card" id={section.id}>
+        <p class="kicker">{groundingLabel[section.grounding]}</p>
+        <h2>{section.title}</h2>
+        <p>{section.summary}</p>
+        <ul>{section.actions.map((action) => <li>{action}</li>)}</ul>
+      </section>
+    ))}
+  </div>
+</BaseLayout>

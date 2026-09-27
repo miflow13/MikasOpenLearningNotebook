@@ -1,0 +1,28 @@
+---
+interface Entry {
+  id: string;
+  title: string;
+  description: string;
+  topic: string;
+  href: string;
+  date?: string;
+}
+interface Props { entries: Entry[]; }
+const { entries } = Astro.props;
+---
+<section class="journey-timeline-section" aria-labelledby="journey-timeline-title">
+  <p class="kicker">how I got here</p>
+  <h2 id="journey-timeline-title">Learning timeline</h2>
+  <ol class="journey-timeline">
+    {entries.map((entry) => (
+      <li>
+        <div class="journey-timeline-marker" aria-hidden="true"></div>
+        <div class="journey-timeline-content">
+          <p class="topic-label">{entry.date ?? entry.topic}</p>
+          <h3><a href={entry.href}>{entry.title}</a></h3>
+          <p>{entry.description}</p>
+        </div>
+      </li>
+    ))}
+  </ol>
+</section>

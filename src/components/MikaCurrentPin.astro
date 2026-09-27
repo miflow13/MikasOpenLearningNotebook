@@ -1,0 +1,35 @@
+---
+import { roadmapPhases, roadmapTrails } from '../data/roadmap';
+import type { MikaJourneyState } from '../data/journey';
+
+interface Props { state: MikaJourneyState; compact?: boolean; }
+const { state, compact = false } = Astro.props;
+const phase = roadmapPhases.find((item) => item.id === state.currentPhase)!;
+const trails = state.activeTrails
+  .map((id) => roadmapTrails.find((trail) => trail.id === id))
+  .filter(Boolean);
+const formattedDate = new Date(`${state.updatedAt}T00:00:00Z`).toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  timeZone: 'UTC',
+});
+---
+<aside class:list={['mika-current-pin', { compact }]} aria-labelledby={compact ? 'mika-pin-home' : 'mika-pin-journey'}>
+  <p class="kicker">📍 Mika is currently here</p>
+  <h2 id={compact ? 'mika-pin-home' : 'mika-pin-journey'}>Phase {phase.number} · {phase.title}</h2>
+
+  <div class="mika-pin-grid">
+    <div>
+      <h3>Current focus</h3>
+      <ul>{state.currentFocus.map((focus) => <li>{focus}</li>)}</ul>
+    </div>
+    <div>
+      <h3>Active trails</h3>
+      <ul>{trails.map((trail) => trail && <li>{trail.title}</li>)}</ul>
+    </div>
+  </div>
+
+  <p><strong>Recent milestone:</strong> {state.recentMilestone}</p>
+  <p class="small">Last updated {formattedDate}. This is my current learning frontier, not a completion marker.</p>
+</aside>

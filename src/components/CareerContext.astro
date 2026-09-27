@@ -1,0 +1,29 @@
+---
+import type { CareerContextData } from '../data/roadmap';
+
+interface Props {
+  career?: CareerContextData;
+}
+
+const { career } = Astro.props;
+---
+{career && (
+  <aside class="career-context" aria-labelledby="career-context-title">
+    <p class="kicker">career context</p>
+    <h2 id="career-context-title">Where this shows up professionally</h2>
+    <div class="career-context-grid">
+      <div>
+        <h3>Commonly useful for</h3>
+        <ul>{career.usefulFor.map((item) => <li>{item}</li>)}</ul>
+      </div>
+      <div>
+        <h3>Interview relevance</h3>
+        <p>{career.interviewRelevance}</p>
+      </div>
+      <div>
+        <h3>Good portfolio evidence</h3>
+        <ul>{career.portfolioEvidence.map((item) => <li>{item}</li>)}</ul>
+      </div>
+    </div>
+  </aside>
+)}
