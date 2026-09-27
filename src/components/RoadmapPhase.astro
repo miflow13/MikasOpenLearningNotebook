@@ -10,7 +10,7 @@ interface Props {
 
 const { phase, skills, base } = Astro.props;
 ---
-<section class="roadmap-phase" id={`phase-${phase.id}`}>
+<section class="roadmap-phase" id={`phase-${phase.id}`} data-roadmap-phase={phase.id}>
   <div class="phase-number">{phase.number}</div>
   <div class="phase-content">
     <p class="kicker">roadmap phase</p>
