@@ -203,3 +203,77 @@ canonical path representation:
 ~~~
 
 The more experimental the interface becomes, the more important those boring boundaries are.
+
+
+## Referencing a file is different from owning a file
+
+Designing Mochi's Pocket feature gave me another filesystem boundary to think about.
+
+If a user drags a normal local file into the app, the Pocket entry can store the file's absolute path and metadata while leaving the original file where it already lives.
+
+That keeps ownership clear:
+
+~~~text
+user file on disk
+→ Pocket stores reference
+→ app opens/uses the original path
+~~~
+
+The app does not need to silently duplicate ordinary local files into its own storage.
+
+## Missing files are a normal state
+
+A saved path can become invalid later because the user:
+
+- moved the file
+- renamed it
+- deleted it
+- unmounted the drive
+- changed permissions
+
+The Pocket entry can remain visible and report that the item is unavailable.
+
+That gives the user enough context to understand what happened and still remove the stale entry.
+
+A useful model is:
+
+~~~text
+stored reference
+→ resolve path
+→ available: use it
+→ unavailable: keep entry + show state
+~~~
+
+This is cleaner than assuming persistence means the application controls the underlying file.
+
+## Persistent metadata should stay small
+
+For a path-backed feature, persistence usually needs information such as:
+
+- stable Pocket entry ID
+- absolute path
+- display name
+- detected type
+- optional lightweight metadata
+- added timestamp
+
+The file bytes can remain outside the application's persistent state.
+
+That keeps configuration/state small and avoids creating hidden copies of potentially large user files.
+
+## Drag-and-drop belongs at the integration boundary
+
+External drag-and-drop is a toolkit concern.
+
+Classification, capacity rules, persistence, and removal behavior are easier to test when they stay in ordinary application logic.
+
+A clean split looks like:
+
+~~~text
+GTK drop adapter
+→ normalize incoming file/path
+→ Pocket domain logic
+→ persistence
+~~~
+
+This keeps desktop integration thin and leaves the core rules testable without a live desktop session.

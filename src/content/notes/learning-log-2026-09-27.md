@@ -1,6 +1,6 @@
 ---
 title: "Learning Log — September 27, 2026"
-description: "Agentic engineering ownership, Oniria spatial tooling, Linux storage boundaries, technical-writing verification, public build evidence, and career positioning."
+description: "Agentic engineering ownership, Oniria spatial tooling, containers and Kubernetes, technical-writing verification, Linux storage, and career positioning."
 topic: "Learning Log"
 order: 35
 featured: true
@@ -222,6 +222,32 @@ The final document should not merely sound clear.
 A user should be able to complete the task with it.
 
 That means docs quality can be tested through task completion, accuracy, discoverability, and reduced ambiguity.
+
+
+## Docker and Kubernetes finally clicked as layers
+
+Interview preparation gave me a clearer mental model for container infrastructure.
+
+Docker packages an application into a repeatable container environment.
+
+Kubernetes becomes useful when many containerized workloads need scheduling, recovery, scaling, networking, and coordinated deployment.
+
+The vocabulary also started to connect:
+
+~~~text
+image
+→ container
+→ pod
+→ deployment
+→ service
+→ ingress
+~~~
+
+Each term describes a different part of how an application gets packaged, run, managed, and reached.
+
+That gives me a better way to reason about deployment documentation because I can ask which layer a configuration value or failure belongs to.
+
+I still need hands-on Kubernetes practice. I can now explain the core model and follow the path from an application image to traffic reaching a running workload.
 
 ## Interview prep exposed useful knowledge gaps
 
