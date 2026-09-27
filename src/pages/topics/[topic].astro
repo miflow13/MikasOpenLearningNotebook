@@ -2,15 +2,15 @@
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
-const topicSlug = (value: string) => value
-  .toLowerCase()
-  .normalize('NFKD')
-  .replace(/[\u0300-\u036f]/g, '')
-  .replace(/&/g, ' and ')
-  .replace(/[^a-z0-9]+/g, '-')
-  .replace(/^-|-$/g, '');
-
 export async function getStaticPaths() {
+  const topicSlug = (value: string) => value
+    .toLowerCase()
+    .normalize('NFKD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/&/g, ' and ')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-|-$/g, '');
+
   const notes = await getCollection('notes', ({ data }) => !data.draft);
   const topicNames = [...new Set(notes.map((note) => note.data.topic))];
 
