@@ -47,3 +47,17 @@ export function validateRoadmap(
   return errors;
 }
 
+export function validateFieldNoteRefs(
+  skills: readonly RoadmapSkill[],
+  availableNoteIds: ReadonlySet<string>,
+): string[] {
+  const errors: string[] = [];
+  for (const skill of skills) {
+    for (const noteId of skill.fieldNoteIds) {
+      if (!availableNoteIds.has(noteId)) {
+        errors.push(`unknown field note on ${skill.id}: ${noteId}`);
+      }
+    }
+  }
+  return errors;
+}
