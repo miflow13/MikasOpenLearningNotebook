@@ -1,7 +1,10 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProgressNotice from '../../components/ProgressNotice.astro';
+import RoadmapOnboarding from '../../components/RoadmapOnboarding.astro';
 import RoadmapPhase from '../../components/RoadmapPhase.astro';
+import TrailSelector from '../../components/TrailSelector.astro';
 import {
   getSkillsForPhase,
   getSkillsForTrail,
@@ -26,6 +29,20 @@ if (errors.length) throw new Error(`Invalid roadmap content:\n${errors.join('\n'
     <p>This is a living roadmap, not a claim of mastery. It is a build-first path through the concepts that make it easier to create software, understand what it is doing, debug it when it breaks, and explain your decisions to someone else.</p>
     <div class="roadmap-principle"><strong>The loop:</strong> learn enough → build something → break something → debug it → explain what happened → repeat.</div>
     <p>You do not need to finish one phase perfectly before touching the next. Use the spine for orientation, then follow the problems your projects reveal.</p>
+  </section>
+
+  <ProgressNotice />
+  <section class="roadmap-workspace" data-roadmap-workspace data-roadmap-base={base}>
+    <div class="roadmap-workspace-summary">
+      <div>
+        <p class="kicker">your private roadmap</p>
+        <h2>Pick up where you left off</h2>
+        <p data-progress-summary>0 / {roadmapSkills.length} skills touched</p>
+      </div>
+      <a class="primary-link" data-continue-link href={`${base}roadmap/${roadmapSkills[0].id}/`} hidden>Continue →</a>
+    </div>
+    <RoadmapOnboarding />
+    <TrailSelector />
   </section>
 
   <section class="roadmap-status-key">
@@ -66,4 +83,8 @@ if (errors.length) throw new Error(`Invalid roadmap content:\n${errors.join('\n'
     <p>The field notes are the durable lessons. The Journey is where I document what I am learning now, including mistakes, blind spots, bugs, and the things I thought I understood until a project proved otherwise.</p>
     <p><a href={`${base}journey/`}>follow the learning journey →</a> · <a href={`${base}projects/`}>see the projects behind the notes →</a></p>
   </section>
+  <script>
+    import { initRoadmapProgress } from '../../scripts/roadmap-progress';
+    initRoadmapProgress();
+  </script>
 </BaseLayout>
