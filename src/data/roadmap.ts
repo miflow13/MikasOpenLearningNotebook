@@ -455,3 +455,6 @@ export function getSkillsForTrail(id: TrailId): RoadmapSkill[] {
   return roadmapSkills.filter((skill) => skill.trails.includes(id));
 }
 
+export function getRoadmapOrder(skillId: string): number {
+  return roadmapSkills.findIndex((skill) => skill.id === skillId);
+}
