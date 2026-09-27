@@ -130,3 +130,29 @@ Keeping source copies of important wiki pages inside the repository means normal
 ## Main lesson
 
 Git is not just a way to upload code. It is a tool for thinking clearly about change, risk, history, and recovery.
+
+## Git bundles: move history deliberately
+
+A Git bundle is a portable container for Git objects and refs. It is useful when I need to move branch history without relying on the normal remote path.
+
+The important part is that importing a bundle does not magically replace my current branch.
+
+A safer workflow is:
+
+```bash
+git bundle verify path/to/feature.bundle
+git fetch path/to/feature.bundle \
+  refs/heads/feature:refs/remotes/bundle/feature
+git log --oneline --decorate --graph --all
+git switch -c feature refs/remotes/bundle/feature
+```
+
+Then verify:
+
+- the expected commit SHA
+- the current branch
+- upstream/tracking configuration
+- clean working tree
+- whether the local branch and normal remote have diverged
+
+The bundle carries history. **I still decide which ref becomes authoritative.**
