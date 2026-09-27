@@ -55,7 +55,7 @@ if (errors.length) throw new Error(`Invalid roadmap content:\n${errors.join('\n'
 
   <div class="roadmap-phases">
     {roadmapPhases.map((phase) => (
-      <RoadmapPhase phase={phase} skills={getSkillsForPhase(phase.id)} base={base} />
+      <RoadmapPhase phase={phase} skills={getSkillsForPhase(phase.id)} base={base} defaultOpen={phase.id === 'foundations'} />
     ))}
   </div>
 
