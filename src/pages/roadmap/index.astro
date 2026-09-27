@@ -4,6 +4,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import ProgressNotice from '../../components/ProgressNotice.astro';
 import RoadmapOnboarding from '../../components/RoadmapOnboarding.astro';
 import RoadmapPhase from '../../components/RoadmapPhase.astro';
+import RoadmapSettings from '../../components/RoadmapSettings.astro';
 import TrailSelector from '../../components/TrailSelector.astro';
 import {
   getSkillsForPhase,
@@ -43,6 +44,7 @@ if (errors.length) throw new Error(`Invalid roadmap content:\n${errors.join('\n'
     </div>
     <RoadmapOnboarding />
     <TrailSelector />
+    <RoadmapSettings />
   </section>
 
   <section class="roadmap-status-key">
