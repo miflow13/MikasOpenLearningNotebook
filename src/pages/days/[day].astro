@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { compareNotesNewestFirst, displayNoteTitle, formatNoteDay, noteDay } from '../../lib/noteDates';
+
+export async function getStaticPaths() {
+  const notes = await getCollection('notes', ({ data }) => !data.draft);
+  const days = [...new Set(notes.map((note) => noteDay(note)))];
+
+  return days.map((day) => ({
+    params: { day },
+    props: { day },
+  }));
+}
+
+const { day } = Astro.props;
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+const notes = (await getCollection('notes', ({ data }) => !data.draft))
+  .filter((note) => noteDay(note) === day)
+  .sort(compareNotesNewestFirst);
+const formattedDay = formatNoteDay(day);
+---
+<BaseLayout title={formattedDay} description={`Entries added to Mika's learning notebook on ${formattedDay}.`}>
+  <p class="kicker"><a href={`${base}days/`}>days</a></p>
+  <h2>{formattedDay}</h2>
+  <ul class="note-list">
+    {notes.map((note) => (
+      <li>
+        <span class="topic-label">{note.data.topic}</span>
+        <a href={`${base}notes/${note.id}/`}>{displayNoteTitle(note)}</a>
+        <p class="note-description">{note.data.description}</p>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
