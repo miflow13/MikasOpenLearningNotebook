@@ -1,0 +1,31 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { compareNotesNewestFirst, formatNoteDay, noteDay } from '../../lib/noteDates';
+
+const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
+const notes = (await getCollection('notes', ({ data }) => !data.draft))
+  .sort(compareNotesNewestFirst);
+
+const dayCounts = new Map<string, number>();
+for (const note of notes) {
+  const day = noteDay(note);
+  dayCounts.set(day, (dayCounts.get(day) ?? 0) + 1);
+}
+
+const days = [...dayCounts.entries()]
+  .map(([day, count]) => ({ day, count }))
+  .sort((a, b) => b.day.localeCompare(a.day));
+---
+<BaseLayout title="days" description="Browse Mika's learning notebook by day.">
+  <h2>days</h2>
+  <p>Browse the notebook chronologically by the day each entry was first added.</p>
+  <ul class="topic-list">
+    {days.map(({ day, count }) => (
+      <li>
+        <a href={`${base}days/${day}/`}>{formatNoteDay(day)}</a>
+        <span class="topic-count">{count}</span>
+      </li>
+    ))}
+  </ul>
+</BaseLayout>
