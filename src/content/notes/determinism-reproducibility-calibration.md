@@ -76,3 +76,37 @@ Useful provenance includes:
 When part of a system is nondeterministic, I should not give up on rigor.
 
 I should make everything around it as controlled, observable, and reproducible as possible.
+
+
+## Controlled model comparisons need experimental discipline
+
+A small model comparison can still teach me something if I control the variables.
+
+For the low-vs-high reasoning experiment, the useful design was:
+
+- same exact prompt
+- fresh conversation for each run
+- first response only
+- no tools or follow-up repair
+- exact model and reasoning setting recorded
+- scoring criteria defined before looking at the result
+- responses scored without model identity influencing the judgment
+
+The most important comparison is **within the same model**:
+
+**low reasoning vs high reasoning**
+
+That avoids pretending that different providers expose equivalent controls.
+
+A benchmark result should also preserve context:
+
+- model/version
+- date
+- prompting regime
+- reasoning setting
+- response length or latency when relevant
+- scoring rubric
+
+Selected benchmark parity does not mean overall product parity.
+
+The closer the experiment gets to a controlled test, the more useful the result becomes.
