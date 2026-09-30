@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
+import { compareNotesNewestFirst, displayNoteTitle } from '../lib/noteDates';
 
 const base = `${import.meta.env.BASE_URL.replace(/\/$/, '')}/`;
 const topicSlug = (value: string) => value
@@ -12,7 +13,7 @@ const topicSlug = (value: string) => value
   .replace(/^-|-$/g, '');
 
 const notes = (await getCollection('notes', ({ data }) => !data.draft))
-  .sort((a, b) => b.data.order - a.data.order);
+  .sort(compareNotesNewestFirst);
 
 const topicNames = [...new Set(notes.map((note) => note.data.topic))].sort();
 const topics = topicNames.map((name) => ({
@@ -26,7 +27,7 @@ const recent = notes.slice(0, 12);
   <section class="intro">
     <h2>my learning of all the things</h2>
     <p>This is my public notebook. I write down what I learn while building software, debugging things, reading documentation, and changing my mind about how something works.</p>
-    <p><a href={`${base}notes/`}>browse all entries</a> or start with a topic below.</p>
+    <p><a href={`${base}notes/`}>browse all entries</a>, <a href={`${base}days/`}>browse by day</a>, or start with a topic below.</p>
   </section>
 
   <section>
@@ -47,7 +48,7 @@ const recent = notes.slice(0, 12);
       {recent.map((note) => (
         <li>
           <span class="topic-label">{note.data.topic}</span>
-          <a href={`${base}notes/${note.id}/`}>{note.data.title}</a>
+          <a href={`${base}notes/${note.id}/`}>{displayNoteTitle(note)}</a>
           <p class="note-description">{note.data.description}</p>
         </li>
       ))}
