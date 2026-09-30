@@ -237,6 +237,33 @@ The recurring list today was:
 
 That is a much better learning plan than vaguely trying to "learn more programming."
 
+## I now have a primary self-taught developer roadmap
+
+Today I turned the career research into a durable plan rather than another list of things I could learn.
+
+The central decision is:
+
+> I do not need to relearn programming from zero. I need to turn practical building experience into stronger fundamentals, production depth, interview readiness, and clearer hiring evidence.
+
+The roadmap is now:
+
+**CS50 → DSA / SQL / Linux fundamentals → TypeScript / React / Node / PostgreSQL depth → Python / AI engineering → testing / CI / Docker / cloud → junior system design → three polished flagship projects → interview practice + consistent applications**
+
+Software engineering is the primary lane.
+
+Technical writing stays as a differentiator because understanding a system deeply enough to document it is useful evidence of engineering skill.
+
+The biggest constraint is also explicit now:
+
+**Do not respond to uncertainty by collecting frameworks, courses, certificates, or new projects.**
+
+New learning should close a known gap.
+
+New projects should demonstrate a capability that is currently missing.
+
+The full plan now lives as a permanent notebook entry: **From Self-Taught Builder to Hireable Engineer**.
+
+
 ## Credentials should add signal, not clutter
 
 I also reviewed free learning options with credentials.
