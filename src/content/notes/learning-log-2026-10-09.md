@@ -1,6 +1,6 @@
 ---
 title: "Learning Log — October 9, 2026"
-description: "Taking apart a 'collaboration' email aimed at developers, what happens between pressing Enter and seeing output, man pages, and a surprising finding about who likes AI."
+description: "What happens between pressing Enter and seeing output, man pages, and a surprising finding about who likes AI."
 topic: "Learning Log"
 order: 53
 featured: true
@@ -8,24 +8,6 @@ draft: false
 ---
 
 Today was shorter on building and longer on understanding things I use every day without thinking about them.
-
-## Anatomy of a "collaboration" email
-
-I got an email from someone claiming to run a small dev team in Japan, saying they'd found me on GitHub and wanted a "long-term collaboration" with engineers in my US state. It matched a well-documented scam pattern almost line for line.
-
-The tells, in order of how fast they should have tipped me off:
-
-- **It named my US state.** A team abroad has no reason to care which state I live in unless they need a US identity.
-- **No project named.** Someone who actually read my GitHub would mention Mochi or KeyFlip. "AI and machine learning" fits half of GitHub.
-- **No role, rate, or scope.** Just a "collab" and a call.
-- **The "booking" link was only a `#contact` anchor.** Replying mostly confirms that my address is live.
-
-What these usually turn into, based on documented cases:
-
-1. **Identity rental.** A follow-up reveals they want to work US remote jobs through your profile. Security researchers have tracked North Korea-linked IT workers using this approach, and Americans who lent their identities to schemes like this have been prosecuted.
-2. **Malware.** A "check out our project" repo that runs code when you open it. Researchers have reported campaigns that send developers job or code-review lures pointing at attacker-controlled repos and editor tooling.
-
-My rule from now on: never clone or open a repo that an unsolicited recruiter sends me. Mark it as spam and move on.
 
 ## What happens when I press Enter
 
@@ -65,8 +47,7 @@ My own read, which is a hypothesis: the education gap probably has more to do wi
 
 ## Still practising
 
-- Spotting the specific tells instead of a vague bad feeling.
 - Verifying systems explanations with real tools before publishing them.
 - Using `man` before searching the web.
 
-Source basis: the October 9 recruiter-email, DEV article planning, and AI-attitudes conversations. The Enter article is an outline, and the `strace` verification hasn't happened yet.
+Source basis: the October 9 DEV article planning and AI-attitudes conversations. The Enter article is an outline, and the `strace` verification hasn't happened yet.
